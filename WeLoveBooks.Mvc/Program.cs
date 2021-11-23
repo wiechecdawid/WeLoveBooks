@@ -27,6 +27,7 @@ await DbInitializer.Initialize(builder, app);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseNodeModules(builder.Environment.WebRootPath);
 app.UseRouting();
 
 app.UseAuthentication();
