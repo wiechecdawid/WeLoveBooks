@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WeLoveBooks.DataAccess.Data;
 using WeLoveBooks.DataAccess.Data.Seeder;
@@ -8,24 +7,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddScoped<ISeeder, Seeder>();
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(
    builder.Configuration.GetConnectionString("Default")));
 
-var app = builder.Build();
+builder.Services.AddIdentityServices(builder.Configuration);
 
-await builder.CreateRoles(
-    app.Services.GetRequiredService<RoleManager<IdentityRole>>());
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    //app.UseHsts();
 }
 
-await app.ConfigureSiteAdmin(builder.Configuration);
+await DbInitializer.Initialize(builder, app);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -37,7 +35,5 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-Seeder seeder = new(app.Services, builder.Configuration);
 
 app.Run();
