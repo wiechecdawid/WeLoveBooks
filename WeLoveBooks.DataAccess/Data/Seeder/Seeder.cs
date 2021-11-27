@@ -20,12 +20,12 @@ public class Seeder: ISeeder
     {
         using var context = _services.GetService<AppDbContext>();
         await context!.Database.MigrateAsync();
+        await Seed(context);
     }
 
-    public async Task Seed()
+    private async Task Seed(AppDbContext context)
     {
         var userManager = _services.GetService<UserManager<AppUser>>();
-        using var context = _services.GetService<AppDbContext>();
 
         if(userManager.Users.Count() < 2)
         {
@@ -56,23 +56,24 @@ public class Seeder: ISeeder
             };
 
             await context.Authors.AddRangeAsync(author1, author2);
+            await context.SaveChangesAsync();
         }
 
         if (!context.Books.Any())
         {
-            var a1 = await context.Authors.Where(a => a.FirstName == "Jeff").FirstOrDefaultAsync();
-            var a2 = await context.Authors.Where(a => a.LastName == "Poe").FirstOrDefaultAsync();
+            var a1 = context.Authors.ToList();
+            var a2 = context.Authors.Where(a => a.LastName == "Poe").ToList().FirstOrDefault();
 
             Book book1 = new()
             {
-                AuthorId = a1.Id,
+                AuthorId = a1[0].Id,
                 Title = "Unicestwienie",
                 CreatedDate = new DateTime(2014, 2, 4)
             };
 
             Book book2 = new()
             {
-                AuthorId = a1.Id,
+                AuthorId = a1[0].Id,
                 Title = "Ujarzmienie",
                 CreatedDate = new DateTime(2014, 5, 6)
             };
@@ -85,13 +86,14 @@ public class Seeder: ISeeder
             };
 
             await context.Books.AddRangeAsync(book1, book2, book3);
+            await context.SaveChangesAsync();
         }
 
         if (!context.Reviews.Any())
         {
-            var b1 = await context.Books.Where(a => a.Title == "Unicestwienie").FirstOrDefaultAsync();
-            var b2 = await context.Books.Where(a => a.Title == "Ujarzmienie").FirstOrDefaultAsync();
-            var b3 = await context.Books.Where(a => a.Title == "Kruk").FirstOrDefaultAsync();
+            var b1 = context.Books.Where(a => a.Title == "Unicestwienie").ToList().FirstOrDefault();
+            var b2 = context.Books.Where(a => a.Title == "Ujarzmienie").ToList().FirstOrDefault();
+            var b3 = context.Books.Where(a => a.Title == "Kruk").ToList().FirstOrDefault();
 
             Review review1 = new()
             {
@@ -115,8 +117,7 @@ public class Seeder: ISeeder
             };
 
             await context.Reviews.AddRangeAsync(review1, review2, review3);
+            await context.SaveChangesAsync();
         }
-
-        await context.SaveChangesAsync();
     }
 }

@@ -7,5 +7,4 @@ namespace WeLoveBooks.DataAccess.Data.Seeder;
 public interface ISeeder
 {
     Task Initialize();
-    Task Seed();
 }

@@ -9,33 +9,13 @@ namespace WeLoveBooks.Mvc.Middleware;
 
 public static class WebApplicationBuilderExtensions
 {
-    public static async Task CreateRoles(this WebApplicationBuilder builder, RoleManager<IdentityRole> roleManager)
-    {
-        List<IdentityRole> roles = new()
-        {
-            new IdentityRole { Name = builder.Configuration["RoleNames:SiteAdmin"] },
-            new IdentityRole { Name = builder.Configuration["RoleNames:GroupAdmin"] },
-            new IdentityRole { Name = builder.Configuration["RoleNames:GroupUser"] },
-            new IdentityRole { Name = builder.Configuration["RoleNames:RegularUser"] },
-        };
-
-        foreach (var role in roles)
-        {
-            if (await roleManager.RoleExistsAsync(role.Name)) continue;
-            var result = await roleManager.CreateAsync(role);
-            if (!result.Succeeded)
-                throw new Exception($"Could not create {role.Name} role.");
-        }
-    }
-
     public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
     {
         services.AddIdentity<AppUser, IdentityRole>(cfg =>
         {
             cfg.User.RequireUniqueEmail = true;
         })
-            .AddEntityFrameworkStores<AppDbContext>()
-            .AddSignInManager<SignInManager<AppUser>>();
+            .AddEntityFrameworkStores<AppDbContext>();
 
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(config["Token:SecretKey"]));
