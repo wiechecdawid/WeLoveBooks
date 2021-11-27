@@ -3,49 +3,51 @@ using Microsoft.AspNetCore.Mvc;
 using WeLoveBooks.DataAccess.Models;
 using WeLoveBooks.Mvc.ViewModels;
 
-namespace WeLoveBooks.Mvc.Controllers
+namespace WeLoveBooks.Mvc.Controllers;
+
+public class AccountController : Controller
 {
-    public class AccountController : Controller
+    private readonly SignInManager<AppUser> _signInManager;
+    private readonly UserManager<AppUser> _userManager;
+
+    public AccountController(SignInManager<AppUser> signInManager,
+        UserManager<AppUser> userManager)
     {
-        private readonly SignInManager<AppUser> _signInManager;
+        _signInManager = signInManager;
+        _userManager = userManager;
+    }
 
-        public AccountController(SignInManager<AppUser> signInManager)
+    [HttpGet]
+    public IActionResult Login()
+    {
+        if (User.Identity.IsAuthenticated)
         {
-            _signInManager = signInManager;
+            return RedirectToAction("Index", "Home");
         }
+        return View();
+    }
 
-        [HttpGet]
-        public IActionResult Login()
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Login(LoginPageViewModel model)
+    {
+        if (ModelState.IsValid)
         {
-            if (this.User.Identity.IsAuthenticated)
+            var result = await _signInManager.PasswordSignInAsync(model.Email,
+                model.Password,
+                model.RememberMe,
+                false);
+
+            if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                if (Request.Query.Keys.Contains("ReturnUrl"))
+                    return Redirect(Request.Query["ReturnUrl"].First());
+                else
+                    return RedirectToAction("Index", "Home");
             }
-            return View();
+
+            ModelState.AddModelError("", "Failed to Log in");
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginPageViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await _signInManager.PasswordSignInAsync(model.Email,
-                    model.Password,
-                    model.RememberMe,
-                    false);
-
-                if (result.Succeeded)
-                {
-                    if (Request.Query.Keys.Contains("ReturnUrl"))
-                        return Redirect(Request.Query["ReturnUrl"].First());
-                    else
-                        return RedirectToAction("Index", "Home");
-                }
-
-                ModelState.AddModelError("", "Failed to Log in");
-            }
-            return View();
-        }
+        return View();
     }
 }
