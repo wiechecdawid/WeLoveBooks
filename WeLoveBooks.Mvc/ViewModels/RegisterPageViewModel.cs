@@ -15,5 +15,4 @@ public class RegisterPageViewModel
     public string LastName { get; set; }
 
     public string PhoneNumber { get; set; }
-
 }
