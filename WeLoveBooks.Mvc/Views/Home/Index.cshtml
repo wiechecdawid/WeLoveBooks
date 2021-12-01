@@ -29,6 +29,7 @@
               </div>
             </div>
         }
+        @*TODO: Find another way of validating admin role*@
         @if(User.IsInRole("Site Admin"))
         {
             <button class="btn btn-md btn-primary">Dodaj książkę</button>
