@@ -23,10 +23,9 @@ namespace WeLoveBooks.Mvc.Controllers
         {
             HomePageViewModel model = new()
             {
-                User = _userManager.FindByNameAsync(User.Identity.Name).Result,
-                Books = _context.Books.Take(10).ToList(),
-                Authors = _context.Authors.Take(10).ToList(),
-                Reviews = _context.Reviews.Take(5).ToList()
+                Books = _context.Books.OrderByDescending(b => b.CreatedDate).Take(10).ToList(),
+                Authors = _context.Authors.OrderByDescending(a => a.LastName).Take(10).ToList(),
+                Reviews = _context.Reviews.OrderByDescending(r => r.CreatedDate).Take(5).ToList()
             };
 
             return View(model);
