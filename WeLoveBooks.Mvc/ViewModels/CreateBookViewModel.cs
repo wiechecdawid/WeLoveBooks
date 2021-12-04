@@ -1,6 +1,6 @@
 ﻿using WeLoveBooks.DataAccess.Models;
 
-namespace WeLoveBooks.Mvc.Areas.AdminArea.ViewModels;
+namespace WeLoveBooks.Mvc.ViewModels;
 
 public class CreateBookViewModel
 {

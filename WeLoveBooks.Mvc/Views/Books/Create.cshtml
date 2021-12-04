@@ -5,7 +5,7 @@
 
 <h2>Dodaj książkę</h2>
 
-<form method="post" asp-controller="Account" asp-action="Register">
+<form method="post" asp-controller="Books" asp-action="Create">
     <div asp-validation-summary="ModelOnly"></div>
 
     <div class="mb-3">
@@ -34,16 +34,6 @@
         <span asp-validation-for="CreatedDate" class="text-warning"></span>
     </div>
     <div class="mb-3">
-        <label class="form-label" asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-warning"></span>
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="PhoneNumber"></label>
-        <input asp-for="PhoneNumber" class="form-control" />
-        <span asp-validation-for="PhoneNumber" class="text-warning"></span>
-    </div>
-    <div class="mb-3">
-        <input class="btn btn-primary" type="submit" value="Register"/>
+        <input class="btn btn-primary" type="submit" value="Dodaj"/>
     </div>
 </form>
