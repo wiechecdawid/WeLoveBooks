@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using WeLoveBooks.DataAccess.Data;
 using WeLoveBooks.DataAccess.Models;
 using WeLoveBooks.Mvc.ViewModels;
@@ -52,9 +53,27 @@ namespace WeLoveBooks.Mvc.Controllers
                 CreatedDate = model.CreatedDate
             };
 
-            _context.Books.Add(book);
+            return EnsureSuccessContextOperation(await _context.SaveChangesAsync());
+        }
 
-            if (await _context.SaveChangesAsync() > 0)
+        [Authorize(Policy = "SiteAdmin")]
+        [HttpPost("Admin/[controller]/[action]")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var book = await _context.Books
+                .FirstOrDefaultAsync(a => a.Id.ToString() == id);
+
+            if (book is null)
+                return BadRequest();
+
+            _context.Books.Remove(book);
+
+            return EnsureSuccessContextOperation(await _context.SaveChangesAsync());
+        }
+
+        private IActionResult EnsureSuccessContextOperation(int result)
+        {
+            if (result > 0)
                 TempData["Result"] = "Success";
             else
                 TempData["Result"] = "Failed";
