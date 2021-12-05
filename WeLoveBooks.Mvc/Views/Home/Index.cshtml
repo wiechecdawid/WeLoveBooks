@@ -26,6 +26,11 @@
                     <p class="card-text"><small class="text-muted">Release date: @book.CreatedDate.ToString("dd.mm.yyyy")</small></p>
                   </div>
                 </div>
+                @if(User.IsInRole("Site Admin"))
+                {
+                    <a asp-controller="Books" asp-action="Edit" asp-route-id="@book.Id" class="btn btn-sm btn-primary" >Edytuj</a>
+                    <a asp-controller="Books" asp-action="Delete" asp-route-id="@book.Id" class="btn btn-sm btn-danger" >Usuń</a>
+                }
               </div>
             </div>
         }
