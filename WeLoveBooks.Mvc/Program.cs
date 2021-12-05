@@ -12,6 +12,10 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(
    builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddAuthorization(options =>
+    options.AddPolicy("SiteAdmin", policy =>
+        policy.RequireRole(builder.Configuration["RoleNames:SiteAdmin"])  
+));
 
 var app = builder.Build();
 
