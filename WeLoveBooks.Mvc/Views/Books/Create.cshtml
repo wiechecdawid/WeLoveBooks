@@ -1,37 +1,31 @@
-﻿@model WeLoveBooks.Mvc.Areas.AdminArea.ViewModels.CreateBookViewModel
+﻿@model WeLoveBooks.Mvc.ViewModels.CreateBookViewModel
 @{
 	ViewData["Title"] = "Create Book";
 }
 
-<h2>Dodaj książkę</h2>
+<h2>Dodaj Książkę</h2>
 
 <form method="post" asp-controller="Books" asp-action="Create">
     <div asp-validation-summary="ModelOnly"></div>
 
     <div class="mb-3">
-        <label class="form-label" asp-for="Title"></label>
-        <input asp-for="Title"class="form-control" />
+        <label class="form-label" asp-for="Title">Tytuł:</label>
+        <input type="text" asp-for="Title" class="form-control" />
         <span asp-validation-for="Title" class="text-warning"></span>
     </div>
     <div class="mb-3">
-        <label class="form-label" asp-for="Description"></label>
-        <input asp-for="Description" class="form-control" />
-        <span asp-validation-for="Description" class="text-warning"></span>
+        <label id="author-list" for="author-list" class="form-label" asp-for="Author">Autor</label>
+        <select asp-for="Author" asp-items="Model.Authors" class="form-control"></select>
     </div>
     <div class="mb-3">
-        <label for="exampleDataList" class="form-label" asp-for="Author">Datalist example</label>
-        <input class="form-control" list="datalistOptions" id="exampleDataList" asp-for="Author" placeholder="Wyszukaj...">
-        <datalist id="datalistOptions">
-          @foreach(var author in Model.Authors)
-          {
-              <option value=@string.Join(" ", author.FirstName, author.LastName)/>
-          }
-        </datalist>
-    </div> 
-    <div class="mb-3">
-        <label class="form-label" asp-for="CreatedDate"></label>
+        <label class="form-label" asp-for="CreatedDate">Data wydania:</label>
         <input asp-for="CreatedDate" type="date" class="form-control" value=@DateTime.UtcNow />
         <span asp-validation-for="CreatedDate" class="text-warning"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="Description">Opis:</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-warning"></span>
     </div>
     <div class="mb-3">
         <input class="btn btn-primary" type="submit" value="Dodaj"/>

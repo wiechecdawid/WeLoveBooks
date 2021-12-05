@@ -17,11 +17,11 @@ public class AuthorsController : Controller
     }
 
     [Authorize(Policy = "SiteAdmin")]
-    [HttpGet("Admin/[action]")]
+    [HttpGet("Admin/[controller]/[action]")]
     public IActionResult Create() => View();
 
     [Authorize(Policy = "SiteAdmin")]
-    [HttpPost("Admin/[action]")]
+    [HttpPost("Admin/[controller]/[action]")]
     public async Task<IActionResult> Create(CreateAuthorViewModel model)
     {
         Author author = new()

@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using WeLoveBooks.DataAccess.Data;
 using WeLoveBooks.DataAccess.Models;
 using WeLoveBooks.Mvc.ViewModels;
 
 namespace WeLoveBooks.Mvc.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class BooksController : Controller
     {
         private readonly AppDbContext _context;
@@ -22,26 +24,31 @@ namespace WeLoveBooks.Mvc.Controllers
         }
 
         [Authorize(Policy = "SiteAdmin")]
-        [HttpGet("Admin/[action]")]
+        [HttpGet("Admin/[controller]/[action]")]
         public IActionResult Create()
         {
+            var authors = _context.Authors.Select(x => 
+                new SelectListItem($"{x.FirstName} {x.LastName}", x.Id.ToString()))
+                .ToList();
+
             CreateBookViewModel model = new()
-            { Authors = _context.Authors.OrderBy(a => a.LastName).ThenBy(a => a.FirstName).ToList() };
+            { Authors = authors };
 
             return View(model);
         }
 
         [Authorize(Policy = "SiteAdmin")]
-        [HttpPost("Admin/[action]")]
+        [HttpPost("Admin/[controller]/[action]")]
         public async Task<IActionResult> Create(CreateBookViewModel model)
         {
+            Author author = _context.Authors.Where(a => a.Id.ToString() == model.Author).FirstOrDefault();
             Book book = new()
             {
                 Title = model.Title,
-                Author = model.Author,
+                Author = author,
                 Description = model.Description,
                 Id = Guid.NewGuid(),
-                AuthorId = model.Author.Id,
+                AuthorId = author.Id,
                 CreatedDate = model.CreatedDate
             };
 
