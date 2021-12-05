@@ -24,13 +24,13 @@
                     <h5 class="card-title">@book.Title</h5>
                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                     <p class="card-text"><small class="text-muted">Release date: @book.CreatedDate.ToString("dd.mm.yyyy")</small></p>
-                    @if(User.IsInRole("Site Admin"))
-                    {
-                        <button class="btn btn-sm btn-primary" asp-controller="Books" asp-action="Edit" asp-route-id="@book.Id">Edytuj</button>
-                        <button class="btn btn-sm btn-danger" asp-controller="Books" asp-action="Delete" asp-route-id="@book.Id">Usuń</button>
-                    }
                   </div>
                 </div>
+                @if(User.IsInRole("Site Admin"))
+                {
+                    <a asp-controller="Books" asp-action="Edit" asp-route-id="@book.Id" class="btn btn-sm btn-primary" >Edytuj</a>
+                    <a asp-controller="Books" asp-action="Delete" asp-route-id="@book.Id" class="btn btn-sm btn-danger" >Usuń</a>
+                }
               </div>
             </div>
         }

@@ -53,11 +53,18 @@ namespace WeLoveBooks.Mvc.Controllers
                 CreatedDate = model.CreatedDate
             };
 
-            return EnsureSuccessContextOperation(await _context.SaveChangesAsync());
+            _context.Books.Add(book);
+
+            if (await _context.SaveChangesAsync() > 0)
+                TempData["Result"] = "Success";
+            else
+                TempData["Result"] = "Failed";
+
+            return RedirectToAction("Index", "Home");
         }
 
         [Authorize(Policy = "SiteAdmin")]
-        [HttpPost("Admin/[controller]/[action]")]
+        [Route("Admin/[controller]/[action]/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var book = await _context.Books
@@ -68,12 +75,7 @@ namespace WeLoveBooks.Mvc.Controllers
 
             _context.Books.Remove(book);
 
-            return EnsureSuccessContextOperation(await _context.SaveChangesAsync());
-        }
-
-        private IActionResult EnsureSuccessContextOperation(int result)
-        {
-            if (result > 0)
+            if (await _context.SaveChangesAsync() > 0)
                 TempData["Result"] = "Success";
             else
                 TempData["Result"] = "Failed";
