@@ -1,0 +1,93 @@
+﻿@using System.Globalization
+@model WeLoveBooks.Mvc.ViewModels.HomePageViewModel
+
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Najnowsze książki
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        @foreach(var book in Model.Books)
+        {
+            <div class="card mb-3" style="max-width: 540px;">
+              <div class="row g-0">
+                <div class="col-md-4">
+                  <img src="~/img/randombook.jpg" class="img-fluid rounded-start" alt="booklogo">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">@book.Title</h5>
+                    <p class="card-text">@book.Description</p>
+                    <p class="card-text"><small class="text-muted">Data wydania: @book.CreatedDate.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("pl-PL"))</small></p>
+                  </div>
+                </div>
+                @if(User.IsInRole("Site Admin"))
+                {
+                    <a asp-controller="Books" asp-action="Edit" asp-route-id="@book.Id" class="btn btn-sm btn-primary" >Edytuj</a>
+                    <a asp-controller="Books" asp-action="Delete" asp-route-id="@book.Id" class="btn btn-sm btn-danger" >Usuń</a>
+                }
+              </div>
+            </div>
+        }
+        @*TODO: Find another way of validating admin role*@
+        @if(User.IsInRole("Site Admin"))
+        {
+            <form method="get">    
+                <button class="btn btn-md btn-primary" asp-controller="Books" asp-action="Create" >Dodaj książkę</button>
+            </form>        
+        }
+       </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        Autorzy
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        @foreach(var author in Model.Authors)
+        {
+            <div class="card mb-3" style="max-width: 540px;">
+              <div class="row g-0">
+                <div class="col-md-4">
+                  <img src="~/img/randombook.jpg" class="img-fluid rounded-start" alt="booklogo">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">@string.Join(" ", author.FirstName, author.LastName)</h5>
+                    <p class="card-text">@author.Bio</p>
+                    <p class="card-text"><small class="text-muted">Data urodzenia: @author.DateOfBirth.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("pl-PL"))</small></p>
+                  </div>
+                </div>
+                @*TODO: Admin author change*@
+              </div>
+            </div>
+        }
+        @*TODO: Find another way of validating admin role*@
+        @if(User.IsInRole("Site Admin"))
+        {
+            <form method="get">    
+                <button class="btn btn-md btn-primary" asp-controller="Authors" asp-action="Create" >Dodaj autora</button>
+            </form>        
+        }
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingThree">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        Najnowsze recenzje
+      </button>
+    </h2>
+    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+      </div>
+    </div>
+  </div>
+</div>
