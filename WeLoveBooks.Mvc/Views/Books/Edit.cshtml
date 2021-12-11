@@ -3,14 +3,14 @@
 	ViewData["Title"] = "Create Book";
 }
 
-<h2>Dodaj Książkę</h2>
+<h2>Edytuj książkę</h2>
 
-<form method="post" asp-controller="Books" asp-action="Create">
+<form method="post" asp-controller="Books" asp-action="Edit">
     <div asp-validation-summary="ModelOnly"></div>
 
     <div class="mb-3">
         <label class="form-label" asp-for="Title">Tytuł:</label>
-        <input type="text" asp-for="Title" class="form-control" />
+        <input type="text" asp-for="Title" class="form-control" value="@Model.Title" />
         <span asp-validation-for="Title" class="text-warning"></span>
     </div>
     <div class="mb-3">
@@ -19,15 +19,15 @@
     </div>
     <div class="mb-3">
         <label class="form-label" asp-for="CreatedDate">Data wydania:</label>
-        <input asp-for="CreatedDate" type="date" class="form-control" value="@DateTime.UtcNow" />
+        <input asp-for="CreatedDate" type="date" class="form-control" value="@Model.CreatedDate" />
         <span asp-validation-for="CreatedDate" class="text-warning"></span>
     </div>
     <div class="mb-3">
         <label class="form-label" asp-for="Description">Opis:</label>
-        <textarea asp-for="Description" class="form-control"></textarea>
+        <textarea asp-for="Description" class="form-control" >@Model.Description</textarea>
         <span asp-validation-for="Description" class="text-warning"></span>
     </div>
     <div class="mb-3">
-        <input class="btn btn-primary" type="submit" value="Dodaj"/>
+        <input class="btn btn-primary" type="submit" value="Edytuj"/>
     </div>
 </form>

@@ -64,6 +64,57 @@ namespace WeLoveBooks.Mvc.Controllers
         }
 
         [Authorize(Policy = "SiteAdmin")]
+        [HttpGet("Admin/[controller]/[action]/{id}")]
+        public IActionResult Edit(string id)
+        {
+            var authors = _context.Authors.Select(x =>
+                new SelectListItem($"{x.FirstName} {x.LastName}", x.Id.ToString()))
+                .ToList();
+
+            var book = _context.Books.Where(b => b.Id.ToString() == id)
+                .Include(b => b.Author)
+                .FirstOrDefault();
+
+            if (book is null)
+                return NotFound();
+
+            CreateBookViewModel model = new()
+            { 
+                Authors = authors,
+                Author = book.Author.Id.ToString(),
+                Description = book.Description,
+                CreatedDate = book.CreatedDate,
+                Title = book.Title
+            };
+
+            return View(model);
+        }
+
+        [Authorize(Policy = "SiteAdmin")]
+        [HttpPost("Admin/[controller]/[action]/{id}")]
+        public async Task<IActionResult> Edit(string id, CreateBookViewModel model)
+        {
+            Author author = _context.Authors.Where(a => a.Id.ToString() == model.Author).FirstOrDefault();
+            
+            var book = _context.Books.Where(a => a.Id.ToString() == id).FirstOrDefault();
+
+            if(book is not null)
+            {
+                book.Title = model.Title;
+                book.Author = author;
+                book.Description = model.Description;
+                book.CreatedDate = model.CreatedDate;
+            }
+
+            if (await _context.SaveChangesAsync() > 0)
+                TempData["Result"] = "Success";
+            else
+                TempData["Result"] = "Failed";
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize(Policy = "SiteAdmin")]
         [Route("Admin/[controller]/[action]/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
