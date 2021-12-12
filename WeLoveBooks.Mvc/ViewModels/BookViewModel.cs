@@ -11,5 +11,6 @@ namespace WeLoveBooks.Mvc.ViewModels
         public Author Author { get; set; }
         IEnumerable<Review> Reviews { get; set; }
         public int ReviewCount => Reviews is not null ? Reviews.Count() : 0;
+        public string AuthorName => $"{Author.FirstName} {Author.LastName}";
     }
 }
