@@ -29,7 +29,8 @@ public class BooksController : Controller
     [HttpGet("{id}")]
     public IActionResult Details(string id)
     {
-        var book = _context.Books.Include(b => b.Author).FirstOrDefault(b => b.Id.ToString() == id);
+        var book = _context.Books.Include(b => b.Author)
+            .FirstOrDefault(b => b.Id.ToString() == id);
         var model = ConvertBookToModel(book);
 
         return View(model);
