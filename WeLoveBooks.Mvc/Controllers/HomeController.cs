@@ -23,8 +23,8 @@ namespace WeLoveBooks.Mvc.Controllers
         {
             HomePageViewModel model = new()
             {
-                Books = _context.Books.OrderByDescending(b => b.CreatedDate).Take(10).ToList(),
-                Authors = _context.Authors.OrderByDescending(a => a.LastName).Take(10).ToList(),
+                Books = _context.Books.OrderByDescending(b => b.CreatedDate).Take(5).ToList(),
+                Authors = _context.Authors.OrderByDescending(a => a.LastName).Take(5).ToList(),
                 Reviews = _context.Reviews.OrderByDescending(r => r.CreatedDate).Take(5).ToList()
             };
 
