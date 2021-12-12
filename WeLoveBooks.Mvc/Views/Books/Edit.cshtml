@@ -19,7 +19,7 @@
     </div>
     <div class="mb-3">
         <label class="form-label" asp-for="CreatedDate">Data wydania:</label>
-        <input asp-for="CreatedDate" type="date" class="form-control" value="@Model.CreatedDate" />
+        <input asp-for="CreatedDate" type="date" class="form-control" id="created-date" value="@Model.CreatedDate.ToString("MM-dd-yyyy")" />
         <span asp-validation-for="CreatedDate" class="text-warning"></span>
     </div>
     <div class="mb-3">
