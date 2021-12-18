@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using WeLoveBooks.DataAccess.Data;
 using WeLoveBooks.DataAccess.Models;
+using WeLoveBooks.Mvc.Services.ObjectToModelConverter;
 using WeLoveBooks.Mvc.ViewModels;
 
 namespace WeLoveBooks.Mvc.Controllers
@@ -10,20 +11,24 @@ namespace WeLoveBooks.Mvc.Controllers
     public class HomeController : Controller
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly IObjectToModelConverter<Book, BookViewModel> _converter;
 
         public HomeController(AppDbContext context,
-            UserManager<AppUser> userManager)
+            IObjectToModelConverter<Book, BookViewModel> converter)
         {
-            _context = context;
-            _userManager = userManager;
+            (_context, _converter) = (context, converter);
         }
 
         public IActionResult Index()
         {
             HomePageViewModel model = new()
             {
-                Books = _context.Books.OrderByDescending(b => b.CreatedDate).Take(5).ToList(),
+                Books = _context.Books
+                    .Include(b => b.Author)
+                    .OrderByDescending(b => b.CreatedDate)
+                    .Select(b => _converter.Convert(b))
+                    .Take(5)
+                    .ToList(),
                 Authors = _context.Authors.OrderByDescending(a => a.LastName).Take(5).ToList(),
                 Reviews = _context.Reviews.OrderByDescending(r => r.CreatedDate).Take(5).ToList()
             };

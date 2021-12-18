@@ -12,5 +12,7 @@ namespace WeLoveBooks.Mvc.ViewModels
         IEnumerable<Review> Reviews { get; set; }
         public int ReviewCount => Reviews is not null ? Reviews.Count() : 0;
         public string AuthorName => $"{Author.FirstName} {Author.LastName}";
+        public string ShortDescription => Description.Split('.').Take(2)
+            .Aggregate("", (s1, s2) => s1 + s2);
     }
 }
