@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WeLoveBooks.DataAccess.Data;
 using WeLoveBooks.DataAccess.Models;
+using WeLoveBooks.Mvc.Services.ObjectToModelConverter;
 using WeLoveBooks.Mvc.ViewModels;
 
 namespace WeLoveBooks.Mvc.Controllers;
@@ -12,16 +13,20 @@ namespace WeLoveBooks.Mvc.Controllers;
 public class BooksController : Controller
 {
     private readonly AppDbContext _context;
+    private readonly IObjectToModelConverter<Book, BookViewModel> _converter;
 
-    public BooksController(AppDbContext context)
+    public BooksController(AppDbContext context, IObjectToModelConverter<Book, BookViewModel> converter)
     {
-        _context = context;
+        (_context, _converter) = (context, converter);
     }
 
     [HttpGet("Index")]
     public IActionResult Index()
     {
-        var model = _context.Books.Select(b => ConvertBookToModel(b)).ToList();
+        var model = _context.Books
+            .Include(b => b.Author)
+            .Select(b => _converter.Convert(b))
+            .ToList();
 
         return View("Index", model);
     }
@@ -29,8 +34,9 @@ public class BooksController : Controller
     [HttpGet("{id}")]
     public IActionResult Details(string id)
     {
-        var book = _context.Books.Include(b => b.Author).FirstOrDefault(b => b.Id.ToString() == id);
-        var model = ConvertBookToModel(book);
+        var book = _context.Books.Include(b => b.Author)
+            .FirstOrDefault(b => b.Id.ToString() == id);
+        var model = _converter.Convert(book);
 
         return View(model);
     }
@@ -143,20 +149,5 @@ public class BooksController : Controller
             TempData["Result"] = "Failed";
 
         return RedirectToAction("Index", "Home");
-    }
-
-    private static BookViewModel ConvertBookToModel(Book book)
-    {
-        string shortDescription = book.Description.Split('.').Take(2)
-                .Aggregate("", (s1, s2) => s1 + s2);
-
-        return new BookViewModel
-        {
-            Title = book.Title,
-            Description = shortDescription,
-            Author = book.Author,
-            CreatedDate = book.CreatedDate,
-            Id = book.Id.ToString()
-        };
     }
 }

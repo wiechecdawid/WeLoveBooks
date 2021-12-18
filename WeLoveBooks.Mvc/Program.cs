@@ -2,13 +2,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WeLoveBooks.DataAccess.Data;
 using WeLoveBooks.DataAccess.Data.Seeder;
+using WeLoveBooks.DataAccess.Models;
 using WeLoveBooks.Mvc.Middleware;
+using WeLoveBooks.Mvc.Services.ObjectToModelConverter;
+using WeLoveBooks.Mvc.ViewModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ISeeder, Seeder>();
+builder.Services.AddScoped<IObjectToModelConverter<Book, BookViewModel>, BookToViewModelConverter>();
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(
    builder.Configuration.GetConnectionString("Default")));
 
