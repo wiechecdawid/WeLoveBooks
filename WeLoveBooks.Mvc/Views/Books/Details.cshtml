@@ -5,6 +5,10 @@
 	ViewData["Title"] = $"{Model.Title} - details";
 }
 
+@{
+    TempData["BookId"] = Model.Id;
+}
+
 <div class="card mb-3">
     <div class="row">
         <div class="col-md-8">
@@ -18,3 +22,9 @@
             <p class="card-text"><small class="text-muted">Data wydania: @Model.CreatedDate.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("pl-PL"))</small></p>
         </div>
     </div>
+</div>
+
+<h2>Recenzje</h2>
+<a asp-controller="Review" asp-action="Create" class="btn btn-sm btn-primary" >Dodaj recenzję</a>
+
+<partial name="_ReviewListPartial" for="Reviews" />

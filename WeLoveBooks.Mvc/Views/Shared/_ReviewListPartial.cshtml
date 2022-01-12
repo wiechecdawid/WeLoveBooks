@@ -1,0 +1,21 @@
+﻿@model IEnumerable<WeLoveBooks.Mvc.ViewModels.ReviewViewModel>
+
+<div class="reviews">
+	<ul class="list-group">
+		@foreach(var review in Model)
+		{
+			<li class="list-group-item">
+				<div class="card">
+				<div class="card-header">
+					@review.UserName
+				</div>
+				<div class="card-body">
+				<h5 class="card-title">@review.Title</h5>
+				<p class="card-text">@review.ShortenedContent</p>
+				<a class="btn btn-primary" asp-controller="Reviews" asp-action="Details" asp-route-id="@review.Id">Więcej</a>
+				</div>
+			</div>
+			</li>
+		}
+	</ul>
+</div>

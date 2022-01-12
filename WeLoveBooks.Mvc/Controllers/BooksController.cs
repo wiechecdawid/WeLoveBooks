@@ -20,7 +20,7 @@ public class BooksController : Controller
         (_context, _converter) = (context, converter);
     }
 
-    [HttpGet("Index")]
+    [HttpGet("[controller]/Index")]
     public IActionResult Index()
     {
         var model = _context.Books
@@ -31,10 +31,12 @@ public class BooksController : Controller
         return View("Index", model);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("[controller]/{id}")]
     public IActionResult Details(string id)
     {
         var book = _context.Books.Include(b => b.Author)
+            .Include(b => b.Reviews)
+            .ThenInclude(r => r.AppUser)
             .FirstOrDefault(b => b.Id.ToString() == id);
         var model = _converter.Convert(book);
 
