@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WeLoveBooks.DataAccess.Data;
 using WeLoveBooks.DataAccess.Models;
 using WeLoveBooks.Mvc.ViewModels;
@@ -20,24 +21,30 @@ public class ReviewController : Controller
         _userManager = userManager;
     }
 
-    [HttpGet("Index")]
+    [HttpGet("[controller]/Index")]
     public IActionResult Index()
     {
         return View();
     }
 
-    [HttpGet("{id}")]
-    public IActionResult Details(string reviewId)
+    [HttpGet("[controller]/[action]/{id}")]
+    public IActionResult Details(string id)
     {
-        if(!Guid.TryParse(reviewId, out Guid guidId))
+        if (!Guid.TryParse(id, out Guid guidId)) return BadRequest("Invalid review ID");
+
+        var review = _context.Reviews
+            .Where(r => r.Id == guidId)
+            .Include(r => r.AppUser)
+            .FirstOrDefault();
+        if (review is null) return BadRequest("Could not find review");
+
+        return View(new ReviewPageViewModel
         {
-            return BadRequest();
-        }
-
-        var model = _context.Reviews.Where(r => r.Id == guidId).FirstOrDefault();
-
-        if (model is null) return NotFound();
-        return View(model);
+            Id = id,
+            Title = review.Title,
+            Content = review.Content,
+            AppUser = review.AppUser
+        });
     }
 
     [Authorize]
@@ -64,7 +71,7 @@ public class ReviewController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(CreateReviewViewModel model)
     {
-        if (!Guid.TryParse(TempData["BookId"].ToString(), out Guid guidId))
+        if (!Guid.TryParse(TempData["BookId"]?.ToString(), out Guid guidId))
             return BadRequest("Incorrect book id");
 
         var book = _context.Books.Where(b => b.Id == guidId).FirstOrDefault();
