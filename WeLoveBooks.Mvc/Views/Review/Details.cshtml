@@ -5,4 +5,8 @@
 }
 
 <h1>@Model.Title</h1>
-<div>@Model.Content</div>
+<h5>@Model.UserFullName</h5>
+<div>
+	@Html.Raw(Model.Content.Replace(Environment.NewLine, "<br/>"))
+</div>
+<a asp-controller="Books" asp-action="Details" asp-route-id="@Model.BookId">Do książki</a>

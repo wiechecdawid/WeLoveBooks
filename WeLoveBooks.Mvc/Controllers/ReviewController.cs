@@ -41,6 +41,7 @@ public class ReviewController : Controller
         return View(new ReviewPageViewModel
         {
             Id = id,
+            BookId = review.BookId.ToString(),
             Title = review.Title,
             Content = review.Content,
             AppUser = review.AppUser
