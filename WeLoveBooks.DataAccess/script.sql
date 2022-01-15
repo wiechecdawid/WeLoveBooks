@@ -349,3 +349,82 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115153556_BookRateEntityRedefined')
+BEGIN
+    ALTER TABLE [BookRates] DROP CONSTRAINT [FK_BookRates_AspNetUsers_AppUserId];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115153556_BookRateEntityRedefined')
+BEGIN
+    ALTER TABLE [BookRates] DROP CONSTRAINT [FK_BookRates_Books_BookId];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115153556_BookRateEntityRedefined')
+BEGIN
+    DROP INDEX [IX_BookRates_AppUserId] ON [BookRates];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115153556_BookRateEntityRedefined')
+BEGIN
+    DROP INDEX [IX_BookRates_BookId] ON [BookRates];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115153556_BookRateEntityRedefined')
+BEGIN
+    DECLARE @var0 sysname;
+    SELECT @var0 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[BookRates]') AND [c].[name] = N'AppUserId');
+    IF @var0 IS NOT NULL EXEC(N'ALTER TABLE [BookRates] DROP CONSTRAINT [' + @var0 + '];');
+    ALTER TABLE [BookRates] DROP COLUMN [AppUserId];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115153556_BookRateEntityRedefined')
+BEGIN
+    EXEC sp_rename N'[BookRates].[BookId]', N'ReviewId', N'COLUMN';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115153556_BookRateEntityRedefined')
+BEGIN
+    ALTER TABLE [Reviews] ADD [BookRateId] uniqueidentifier NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115153556_BookRateEntityRedefined')
+BEGIN
+    ALTER TABLE [BookRates] ADD [BookRateId] uniqueidentifier NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115153556_BookRateEntityRedefined')
+BEGIN
+    CREATE UNIQUE INDEX [IX_BookRates_BookRateId] ON [BookRates] ([BookRateId]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115153556_BookRateEntityRedefined')
+BEGIN
+    ALTER TABLE [BookRates] ADD CONSTRAINT [FK_BookRates_Reviews_BookRateId] FOREIGN KEY ([BookRateId]) REFERENCES [Reviews] ([Id]) ON DELETE CASCADE;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115153556_BookRateEntityRedefined')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20220115153556_BookRateEntityRedefined', N'6.0.0');
+END;
+GO
+
+COMMIT;
+GO
+

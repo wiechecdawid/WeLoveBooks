@@ -9,6 +9,8 @@ public class Review
     public virtual Book Book { get; set; }
     public string AppUserId { get; set; }
     public virtual AppUser AppUser { get; set; }
+    public Guid BookRateId { get; set; }
+    public virtual BookRate BookRate { get; set; }
     public ICollection<Comment> Comments { get; set; }
     public DateTime CreatedDate { get; set; }
 }

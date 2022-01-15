@@ -9,5 +9,4 @@ public class Book
     public Guid AuthorId { get; set; }
     public virtual Author Author { get; set; }
     public ICollection<Review> Reviews { get; set; }
-    public ICollection<BookRate> BookRates { get; set; }
 }

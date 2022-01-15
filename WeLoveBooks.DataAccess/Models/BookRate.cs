@@ -3,10 +3,8 @@
 public class BookRate
 {
     public Guid Id { get; set; }
-    public string AppUserId { get; set; }
-    public AppUser AppUser { get; set; }
-    public Guid BookId { get; set; }
-    public Book Book { get; set; }
+    public Guid ReviewId { get; set; }
+    public virtual Review Review { get; set; }
     public Verdict Verdict { get; set; }
 }
 

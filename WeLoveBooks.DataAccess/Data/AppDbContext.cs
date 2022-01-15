@@ -30,7 +30,6 @@ public class AppDbContext : IdentityDbContext<AppUser>
             .HasForeignKey(c => c.AppUserId)
             .IsRequired();
 
-        new BookRateEntityTypeConfiguration().Configure(builder.Entity<BookRate>());
         new ReviewEntityTypeConfiguration().Configure(builder.Entity<Review>());
         // modelBuilder.ApplyConfiguration(new ReviewEntityTypeConfiguration())
     }
