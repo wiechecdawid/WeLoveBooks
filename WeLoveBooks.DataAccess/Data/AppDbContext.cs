@@ -13,6 +13,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<Author> Authors { get; set; }
     public DbSet<Book> Books { get; set; }
     public DbSet<Review> Reviews { get; set; }
+    public DbSet<BookRate> BookRates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -29,6 +30,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
             .HasForeignKey(c => c.AppUserId)
             .IsRequired();
 
+        new BookRateEntityTypeConfiguration().Configure(builder.Entity<BookRate>());
         new ReviewEntityTypeConfiguration().Configure(builder.Entity<Review>());
         // modelBuilder.ApplyConfiguration(new ReviewEntityTypeConfiguration())
     }

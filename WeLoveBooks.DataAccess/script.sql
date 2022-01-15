@@ -310,3 +310,42 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115001856_BookRateEntityAdded')
+BEGIN
+    CREATE TABLE [BookRates] (
+        [Id] uniqueidentifier NOT NULL,
+        [AppUserId] nvarchar(450) NOT NULL,
+        [BookId] uniqueidentifier NOT NULL,
+        [Verdict] int NOT NULL,
+        CONSTRAINT [PK_BookRates] PRIMARY KEY ([Id]),
+        CONSTRAINT [FK_BookRates_AspNetUsers_AppUserId] FOREIGN KEY ([AppUserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE,
+        CONSTRAINT [FK_BookRates_Books_BookId] FOREIGN KEY ([BookId]) REFERENCES [Books] ([Id]) ON DELETE CASCADE
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115001856_BookRateEntityAdded')
+BEGIN
+    CREATE INDEX [IX_BookRates_AppUserId] ON [BookRates] ([AppUserId]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115001856_BookRateEntityAdded')
+BEGIN
+    CREATE INDEX [IX_BookRates_BookId] ON [BookRates] ([BookId]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220115001856_BookRateEntityAdded')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20220115001856_BookRateEntityAdded', N'6.0.0');
+END;
+GO
+
+COMMIT;
+GO
+
