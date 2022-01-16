@@ -5,6 +5,7 @@ using WeLoveBooks.DataAccess.Data.Seeder;
 using WeLoveBooks.DataAccess.Models;
 using WeLoveBooks.Mvc.Middleware;
 using WeLoveBooks.Mvc.Services.ObjectToModelConverter;
+using WeLoveBooks.Mvc.Services.ReviewService;
 using WeLoveBooks.Mvc.ViewModels;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("SiteAdmin", policy =>
         policy.RequireRole(builder.Configuration["RoleNames:SiteAdmin"])  
 ));
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 var app = builder.Build();
 
