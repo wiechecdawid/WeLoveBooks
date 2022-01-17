@@ -9,7 +9,7 @@ namespace WeLoveBooks.Mvc.ViewModels
         public string Description { get; set; }
         public DateTime CreatedDate { get; set; }
         public Author Author { get; set; }
-        public IEnumerable<ReviewViewModel> Reviews { get; set; }
+        public IEnumerable<ReviewListViewModel> Reviews { get; set; }
         public int ReviewCount => Reviews is not null ? Reviews.Count() : 0;
         public string AuthorName => $"{Author.FirstName} {Author.LastName}";
         public string ShortDescription => Description.Split('.').Take(2)

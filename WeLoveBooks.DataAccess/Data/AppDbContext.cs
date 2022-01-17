@@ -7,13 +7,14 @@ namespace WeLoveBooks.DataAccess.Data;
 
 public class AppDbContext : IdentityDbContext<AppUser>
 {
+    public AppDbContext() { }
     public AppDbContext(DbContextOptions options): base(options)
     {    }
 
-    public DbSet<Author> Authors { get; set; }
-    public DbSet<Book> Books { get; set; }
-    public DbSet<Review> Reviews { get; set; }
-    public DbSet<BookRate> BookRates { get; set; }
+    public virtual DbSet<Author> Authors { get; set; }
+    public virtual DbSet<Book> Books { get; set; }
+    public virtual DbSet<Review> Reviews { get; set; }
+    public virtual DbSet<BookRate> BookRates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

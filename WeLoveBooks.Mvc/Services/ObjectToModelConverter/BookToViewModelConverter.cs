@@ -7,13 +7,13 @@ public class BookToViewModelConverter : IObjectToModelConverter<Book, BookViewMo
 {
     public BookViewModel Convert(Book book)
     {
-        List<ReviewViewModel> reviews = new();
+        List<ReviewListViewModel> reviews = new();
 
         if(book.Reviews is not null)
         {
             foreach(var r in book.Reviews)
             {
-                reviews.Add(new ReviewViewModel
+                reviews.Add(new ReviewListViewModel
                 {
                     Id = r.Id.ToString(),
                     UserName = r.AppUser.UserName,
