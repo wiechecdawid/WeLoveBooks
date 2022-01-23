@@ -23,6 +23,17 @@ public class ReviewService : IReviewService
         };
     }
 
+    public IEnumerable<ReviewListViewModel> GetLatestReviews()
+    {
+        return _context.Reviews
+            .OrderByDescending(r => r.CreatedDate)
+            .Take(5)
+            .Include(r => r.BookRate)
+            .Include(r => r.AppUser)
+            .Include(r => r.BookRate)
+            .Select(r => ToReviewListViewModel(r)).ToList();
+    }
+
     public IEnumerable<ReviewListViewModel> GetAllBookReviews(string bookId)
     {
         var guidId = ConvertIdToGuid(bookId);
@@ -34,19 +45,10 @@ public class ReviewService : IReviewService
     {
         var reviews = _context.Reviews
             .Include(r => r.Book)
-            .Include(r => r.AppUser)
             .Where(r => r.Book.Id == bookId)
             .Include(r => r.AppUser)
             .Include(r => r.BookRate)
-            .Select(r => new ReviewListViewModel
-            {
-                Id = r.Id.ToString(),
-                Title = r.Title,
-                Content = r.Content,
-                UserName = r.AppUser.UserName,
-                CreatedDate = r.CreatedDate,
-                Verdict = GetVerdict(r.BookRate.Verdict)
-            })
+            .Select(r => ToReviewListViewModel(r))
             .ToList();
 
         if (!reviews.Any()) throw new ArgumentException("No reviews found");
@@ -65,7 +67,7 @@ public class ReviewService : IReviewService
             .FirstOrDefault();
 
         if (review is null)
-            throw new InvalidOperationException($"Could not find any review with {nameof(id)}: {id}");
+            throw new ArgumentException($"Could not find any review with {nameof(id)}: {id}");
 
         return new ReviewPageViewModel
         {
@@ -85,6 +87,16 @@ public class ReviewService : IReviewService
 
         return guidId;
     }
+
+    private ReviewListViewModel ToReviewListViewModel(Review r) => new ReviewListViewModel
+    {
+        Id = r.Id.ToString(),
+        Title = r.Title,
+        Content = r.Content,
+        UserName = r.AppUser.UserName,
+        CreatedDate = r.CreatedDate,
+        Verdict = GetVerdict(r.BookRate.Verdict)
+    };
 
     private string GetVerdict(Verdict verdict) => _verdictMap[(int)verdict];
 }
