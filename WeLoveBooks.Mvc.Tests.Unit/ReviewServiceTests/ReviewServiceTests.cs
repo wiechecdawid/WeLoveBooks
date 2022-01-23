@@ -27,19 +27,10 @@ public class ReviewServiceTests
     }
 
     [Fact]
-    public void GetAllBookReviewsShould_ReturnReviewList_WhenCorrectIdIsProvided()
+    public void GetAllBookReviewsShould_ReturnListOfReviewList_WhenCorrectBookIdIsProvided()
     {
         // ARRANGE
-        var reviewsMock = MockDbSetFactory<Review>.Create(_mockReviews);
-        var booksMock = MockDbSetFactory<Book>.Create(_mockBooks);
-        var usersMock = MockDbSetFactory<AppUser>.Create(_mockUsers);
-
-        var context = new Mock<AppDbContext>();
-        context.Setup(c => c.Reviews).Returns(reviewsMock.Object);
-        context.Setup(c => c.Books).Returns(booksMock.Object);
-        context.Setup(c => c.Users).Returns(usersMock.Object);
-
-        var reviewService = new ReviewService(context.Object);
+        var reviewService = CreateReviewService();
 
         // ACT
         var reviewList = reviewService.GetAllBookReviews(_mockReviews[0].BookId.ToString());
@@ -70,5 +61,31 @@ public class ReviewServiceTests
         Assert.Equal(typeof(List<ReviewListViewModel>), reviewList.GetType());
         Assert.Equal(expected[0].Id, reviewList.First().Id);
         Assert.Equal(expected[1].Id, reviewList.Last().Id);
+    }
+
+    [Fact]
+    public void GetAllBookReviewsShould_ReturnArgumentException_WhenInorrectBookIdIsProvided()
+    {
+        // ARRANGE        
+        var reviewService = CreateReviewService();
+
+        // ACT & ASSERT
+        Assert.Throws<ArgumentException>(() => reviewService.GetAllBookReviews(Guid.NewGuid().ToString()));
+    }
+
+    private ReviewService CreateReviewService()
+    {
+        var reviewsMock = MockDbSetFactory<Review>.Create(_mockReviews);
+        var booksMock = MockDbSetFactory<Book>.Create(_mockBooks);
+        var usersMock = MockDbSetFactory<AppUser>.Create(_mockUsers);
+
+        var context = new Mock<AppDbContext>();
+        context.Setup(c => c.Reviews).Returns(reviewsMock.Object);
+        context.Setup(c => c.Books).Returns(booksMock.Object);
+        context.Setup(c => c.Users).Returns(usersMock.Object);
+
+        var reviewService = new ReviewService(context.Object);
+
+        return reviewService;
     }
 }
