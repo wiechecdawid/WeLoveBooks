@@ -8,7 +8,7 @@ namespace WeLoveBooks.Mvc.Services.ReviewService;
 public class ReviewService : IReviewService
 {
     private AppDbContext _context;
-    private Dictionary<int, string> _verdictMap;
+    private static Dictionary<int, string> _verdictMap;
 
     public ReviewService(AppDbContext context)
     {
@@ -25,13 +25,15 @@ public class ReviewService : IReviewService
 
     public IEnumerable<ReviewListViewModel> GetLatestReviews()
     {
-        return _context.Reviews
+        var reviews = _context.Reviews
             .OrderByDescending(r => r.CreatedDate)
             .Take(5)
             .Include(r => r.BookRate)
             .Include(r => r.AppUser)
             .Include(r => r.BookRate)
-            .Select(r => ToReviewListViewModel(r)).ToList();
+            .ToList();
+
+        return reviews.Select(r => ToReviewListViewModel(r));
     }
 
     public IEnumerable<ReviewListViewModel> GetAllBookReviews(string bookId)
@@ -88,15 +90,16 @@ public class ReviewService : IReviewService
         return guidId;
     }
 
-    private ReviewListViewModel ToReviewListViewModel(Review r) => new ReviewListViewModel
+    private static ReviewListViewModel ToReviewListViewModel(Review r) => new ReviewListViewModel
     {
         Id = r.Id.ToString(),
         Title = r.Title,
         Content = r.Content,
         UserName = r.AppUser.UserName,
         CreatedDate = r.CreatedDate,
-        Verdict = GetVerdict(r.BookRate.Verdict)
+        BookTitle = r.Book.Title,
+        Verdict = GetVerdict(r.BookRate?.Verdict)
     };
 
-    private string GetVerdict(Verdict verdict) => _verdictMap[(int)verdict];
+    private static string GetVerdict(Verdict? verdict) => verdict is not null ? _verdictMap[(int)verdict] : "";
 }

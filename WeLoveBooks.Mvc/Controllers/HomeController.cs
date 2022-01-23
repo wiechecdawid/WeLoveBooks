@@ -4,6 +4,7 @@ using System.Diagnostics;
 using WeLoveBooks.DataAccess.Data;
 using WeLoveBooks.DataAccess.Models;
 using WeLoveBooks.Mvc.Services.ObjectToModelConverter;
+using WeLoveBooks.Mvc.Services.ReviewService;
 using WeLoveBooks.Mvc.ViewModels;
 
 namespace WeLoveBooks.Mvc.Controllers
@@ -12,11 +13,14 @@ namespace WeLoveBooks.Mvc.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IObjectToModelConverter<Book, BookViewModel> _converter;
+        private readonly IReviewService _reviewService;
 
         public HomeController(AppDbContext context,
+            IReviewService reviewService,
             IObjectToModelConverter<Book, BookViewModel> converter)
         {
-            (_context, _converter) = (context, converter);
+            (_context, _converter, _reviewService) =
+                (context, converter, reviewService);
         }
 
         public IActionResult Index()
@@ -30,7 +34,7 @@ namespace WeLoveBooks.Mvc.Controllers
                     .Take(5)
                     .ToList(),
                 Authors = _context.Authors.OrderByDescending(a => a.LastName).Take(5).ToList(),
-                Reviews = _context.Reviews.OrderByDescending(r => r.CreatedDate).Take(5).ToList()
+                Reviews = _reviewService.GetLatestReviews()
             };
 
             return View(model);

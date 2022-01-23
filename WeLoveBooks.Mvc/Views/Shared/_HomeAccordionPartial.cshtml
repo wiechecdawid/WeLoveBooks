@@ -92,7 +92,37 @@
     </h2>
     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
       <div class="accordion-body">
-        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+        @foreach(var review in Model.Reviews)
+        {
+            <div class="card mb-3" style="max-width: 540px;">
+              <div class="row g-0">
+                <div class="col-md-4">
+                  <img src="~/img/randombook.jpg" class="img-fluid rounded-start" alt="booklogo">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h4 class="card-title">@review.Title</h4>
+                    <h5 class="card-title">@review.UserName</h5>
+                    <p class="card-text"><small class="text-muted">Książka: @review.BookTitle</small></p>
+                    <p class="card-text"><small class="text-muted">Ocena: @review.Verdict</small></p>
+                    <p class="card-text">
+                        @review.ShortenedContent
+                        <a asp-controller="Review" asp-action="Details" asp-route-id="@review.Id">Więcej</a>
+                    </p>
+                    <p class="card-text"><small class="text-muted">Utworzono: @review.CreatedDate.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("pl-PL"))</small></p>
+                  </div>
+                </div>
+                @*TODO: Admin author change*@
+              </div>
+            </div>
+        }
+        @*TODO: Find another way of validating admin role*@
+        @if(User.IsInRole("Site Admin"))
+        {
+            <form method="get">    
+                <button class="btn btn-md btn-primary" asp-controller="Authors" asp-action="Create" >Dodaj autora</button>
+            </form>        
+        }
       </div>
     </div>
   </div>
