@@ -116,13 +116,6 @@
               </div>
             </div>
         }
-        @*TODO: Find another way of validating admin role*@
-        @if(User.IsInRole("Site Admin"))
-        {
-            <form method="get">    
-                <button class="btn btn-md btn-primary" asp-controller="Authors" asp-action="Create" >Dodaj autora</button>
-            </form>        
-        }
       </div>
     </div>
   </div>
