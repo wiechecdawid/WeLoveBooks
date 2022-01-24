@@ -31,8 +31,9 @@ public class Seeder: ISeeder
         {
             AppUser user = new()
             {
-                UserName = "Asia W",
-                Email = "admin@test.com",
+                Email = "testUser@test.com",
+                FirstName = "Jan",
+                LastName = "Kowalski"
             };
 
             await userManager.CreateAsync(user, "Test");
