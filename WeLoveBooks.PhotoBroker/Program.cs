@@ -1,4 +1,5 @@
-using WeLoveBooks.PhotoBroker.Infrastructure;
+using WeLoveBooks.Infrastructure.Interfaces;
+using WeLoveBooks.Infrastructure.PhotoAccessor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // TODO: Add cloudinary settings to appsettings. Edit database
+builder.Services.AddScoped<IPhotoAccessor, PhotoAccessor>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

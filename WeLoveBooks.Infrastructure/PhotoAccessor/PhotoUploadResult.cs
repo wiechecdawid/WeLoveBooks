@@ -1,4 +1,4 @@
-﻿namespace WeLoveBooks.PhotoBroker.Photos;
+﻿namespace WeLoveBooks.Infrastructure.PhotoAccessor;
 
 public class PhotoUploadResult
 {

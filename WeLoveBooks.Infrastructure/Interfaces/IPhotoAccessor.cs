@@ -1,6 +1,7 @@
-﻿using WeLoveBooks.PhotoBroker.Photos;
+﻿using Microsoft.AspNetCore.Http;
+using WeLoveBooks.Infrastructure.PhotoAccessor;
 
-namespace WeLoveBooks.PhotoBroker.Interfaces;
+namespace WeLoveBooks.Infrastructure.Interfaces;
 
 public interface IPhotoAccessor
 {

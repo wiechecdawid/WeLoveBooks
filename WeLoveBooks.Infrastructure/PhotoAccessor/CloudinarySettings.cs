@@ -1,4 +1,4 @@
-﻿namespace WeLoveBooks.PhotoBroker.Infrastructure;
+﻿namespace WeLoveBooks.Infrastructure.PhotoAccessor;
 
 public class CloudinarySettings
 {

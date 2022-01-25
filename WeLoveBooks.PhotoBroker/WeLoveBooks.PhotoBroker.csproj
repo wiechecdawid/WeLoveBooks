@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WeLoveBooks.DataAccess\WeLoveBooks.DataAccess.csproj" />
+    <ProjectReference Include="..\WeLoveBooks.Infrastructure\WeLoveBooks.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

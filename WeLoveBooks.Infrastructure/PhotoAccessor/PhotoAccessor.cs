@@ -1,10 +1,10 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using WeLoveBooks.PhotoBroker.Interfaces;
-using WeLoveBooks.PhotoBroker.Photos;
+using WeLoveBooks.Infrastructure.Interfaces;
 
-namespace WeLoveBooks.PhotoBroker.Infrastructure;
+namespace WeLoveBooks.Infrastructure.PhotoAccessor;
 
 public class PhotoAccessor : IPhotoAccessor
 {
@@ -35,7 +35,7 @@ public class PhotoAccessor : IPhotoAccessor
 
         var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
-        if(uploadResult.Error is not null)
+        if (uploadResult.Error is not null)
             throw new Exception(uploadResult.Error.Message);
 
         return new PhotoUploadResult
@@ -51,5 +51,10 @@ public class PhotoAccessor : IPhotoAccessor
         var result = await _cloudinary.DestroyAsync(deletionParams);
 
         return result.Result == "ok" ? result.Result : null;
+    }
+
+    Task<PhotoUploadResult> IPhotoAccessor.AddPhoto(IFormFile file)
+    {
+        throw new NotImplementedException();
     }
 }
