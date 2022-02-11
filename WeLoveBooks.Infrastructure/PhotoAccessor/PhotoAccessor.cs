@@ -52,9 +52,4 @@ public class PhotoAccessor : IPhotoAccessor
 
         return result.Result == "ok" ? result.Result : null;
     }
-
-    Task<PhotoUploadResult> IPhotoAccessor.AddPhoto(IFormFile file)
-    {
-        throw new NotImplementedException();
-    }
 }

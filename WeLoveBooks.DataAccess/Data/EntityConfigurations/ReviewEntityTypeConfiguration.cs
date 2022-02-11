@@ -4,7 +4,7 @@ using WeLoveBooks.DataAccess.Models;
 
 namespace WeLoveBooks.DataAccess.Data.EntityConfigurations;
 
-internal class ReviewEntityTypeConfiguration: IEntityTypeConfiguration<Review>
+internal class ReviewEntityTypeConfiguration : IEntityTypeConfiguration<Review>
 {
     public void Configure(EntityTypeBuilder<Review> builder)
     {
@@ -27,6 +27,6 @@ internal class ReviewEntityTypeConfiguration: IEntityTypeConfiguration<Review>
         builder
             .HasOne(r => r.BookRate)
             .WithOne(br => br.Review)
-            .HasForeignKey(typeof(BookRate), "BookRateId");
+            .HasForeignKey(typeof(BookRate), "Id");
     }
 }

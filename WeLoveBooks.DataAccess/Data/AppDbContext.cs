@@ -15,15 +15,11 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public virtual DbSet<Book> Books { get; set; }
     public virtual DbSet<Review> Reviews { get; set; }
     public virtual DbSet<BookRate> BookRates { get; set; }
+    public virtual DbSet<Photo> Photos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        builder.Entity<Book>()
-            .HasOne(b => b.Author)
-            .WithMany(a => a.Books)
-            .HasForeignKey(b => b.AuthorId);
 
         builder.Entity<Comment>()
             .HasOne(c => c.AppUser)
@@ -31,7 +27,10 @@ public class AppDbContext : IdentityDbContext<AppUser>
             .HasForeignKey(c => c.AppUserId)
             .IsRequired();
 
+        new BookEntityTypeConfiguration().Configure(builder.Entity<Book>());
+        new AuthorEntityTypeConfiguration().Configure(builder.Entity<Author>());
+
         new ReviewEntityTypeConfiguration().Configure(builder.Entity<Review>());
-        // modelBuilder.ApplyConfiguration(new ReviewEntityTypeConfiguration())
+        // builder.ApplyConfiguration(new ReviewEntityTypeConfiguration())
     }
 }

@@ -428,3 +428,81 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
+BEGIN
+    ALTER TABLE [Books] ADD [PhotoId] nvarchar(450) NULL;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
+BEGIN
+    ALTER TABLE [Authors] ADD [PhotoId] nvarchar(450) NULL;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
+BEGIN
+    ALTER TABLE [AspNetUsers] ADD [PhotoId] nvarchar(450) NULL ;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
+BEGIN
+    CREATE TABLE [Photos] (
+        [Id] nvarchar(450) NOT NULL,
+        [Url] nvarchar(max) NOT NULL,
+        [Type] int NOT NULL,
+        CONSTRAINT [PK_Photos] PRIMARY KEY ([Id])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
+BEGIN
+    CREATE INDEX [IX_Books_PhotoId] ON [Books] ([PhotoId]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
+BEGIN
+    CREATE INDEX [IX_Authors_PhotoId] ON [Authors] ([PhotoId]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
+BEGIN
+    CREATE INDEX [IX_AspNetUsers_PhotoId] ON [AspNetUsers] ([PhotoId]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
+BEGIN
+    ALTER TABLE [AspNetUsers] ADD CONSTRAINT [FK_AspNetUsers_Photos_PhotoId] FOREIGN KEY ([PhotoId]) REFERENCES [Photos] ([Id]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
+BEGIN
+    ALTER TABLE [Authors] ADD CONSTRAINT [FK_Authors_Photos_PhotoId] FOREIGN KEY ([PhotoId]) REFERENCES [Photos] ([Id]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
+BEGIN
+    ALTER TABLE [Books] ADD CONSTRAINT [FK_Books_Photos_PhotoId] FOREIGN KEY ([PhotoId]) REFERENCES [Photos] ([Id]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20220125232254_PhotoEntityAdded', N'6.0.0');
+END;
+GO
+
+COMMIT;
+GO
+

@@ -1,13 +1,20 @@
+using Microsoft.EntityFrameworkCore;
+using WeLoveBooks.DataAccess.Data;
 using WeLoveBooks.Infrastructure.Interfaces;
 using WeLoveBooks.Infrastructure.PhotoAccessor;
+using WeLoveBooks.PhotoBroker.Interfaces;
+using WeLoveBooks.PhotoBroker.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// TODO: Add cloudinary settings to appsettings. Edit database
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(
+   builder.Configuration.GetConnectionString("Default")));
+
 builder.Services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -22,7 +29,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
