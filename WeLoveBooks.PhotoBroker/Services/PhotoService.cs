@@ -27,7 +27,7 @@ public class PhotoService : IPhotoService
 
         try
         {
-            relation = GetRelation(photoDto.ForeignKeyId, type);
+            relation = GetRelationByForeignId(photoDto.ForeignKeyId, type);
         }
         catch (InvalidOperationException)
         {
@@ -62,6 +62,9 @@ public class PhotoService : IPhotoService
             .Where(p => p.Id == photoId)
             .FirstOrDefault();
 
+        if (photo is null)
+            throw new InvalidDataException("Could not find photo by id");
+
         Type type;
         if (photo.Type == PhotoType.Book)
             type = typeof(Book);
@@ -70,7 +73,7 @@ public class PhotoService : IPhotoService
         else
             type = typeof(AppUser);
 
-        var relation = GetRelation();
+        var relation = GetRelationByPhotoId(photo.Id, photo.Type);
 
         relation.PhotoId = null;
         relation.Photo = null;
@@ -89,34 +92,44 @@ public class PhotoService : IPhotoService
         return result;
     }
 
-    private IPhotoRelation GetRelation(string foreignId, PhotoType type)
+    private IPhotoRelation GetRelationByForeignId(string foreignId, PhotoType type)
     {
         if (!Guid.TryParse(foreignId, out Guid guidId))
             throw new ArgumentException("Incorrect id");
-
-        IPhotoRelation relation;
-        switch (type)
+        IPhotoRelation? relation = type switch
         {
-            case PhotoType.Author:
-                relation = _context.Authors.Where(a => a.Id.ToString() == foreignId).FirstOrDefault();
-                break;
-            case PhotoType.Book:
-                relation = _context.Books.Where(b => b.Id.ToString() == foreignId).FirstOrDefault();
-                break;
-            case PhotoType.User:
-                relation = _context.Users.Where(u => u.Id.ToString() == foreignId).FirstOrDefault();
-                break;
-            default:
-                throw new ArgumentException("Unsupported type!");
-        }
-
+            PhotoType.Author => _context.Authors.Where(a => a.Id.ToString() == foreignId).FirstOrDefault(),
+            PhotoType.Book => _context.Books.Where(b => b.Id.ToString() == foreignId).FirstOrDefault(),
+            PhotoType.User => _context.Users.Where(u => u.Id.ToString() == foreignId).FirstOrDefault(),
+            _ => throw new ArgumentException("Unsupported type!"),
+        };
         if (relation is null) throw new InvalidOperationException("Could not fint entity!");
 
         return relation;
     }
 
-    private Func<IPhotoRelation, bool> IsRelationById(IPhotoRelation relation, string foreignId)
+    private IPhotoRelation GetRelationByPhotoId(string id, PhotoType type)
     {
-        return (relation) => relation.Id.ToString() == foreignId;
+        IPhotoRelation? relation = type switch
+        {
+            PhotoType.Author => _context.Authors
+                .Include(a => a.Photo)
+                .Where(a => a.Photo.Id == id)
+                .FirstOrDefault(),
+
+            PhotoType.Book => _context.Books
+                .Include(a => a.Photo)
+                .Where(b => b.Photo.Id == id)
+                .FirstOrDefault(),
+
+            PhotoType.User => _context.Users
+                .Include(a => a.Photo)
+                .Where(u => u.Photo.Id == id)
+                .FirstOrDefault(),
+
+            _ => throw new ArgumentException("Unsupported type!"),
+        };
+
+        return relation;
     }
 }
