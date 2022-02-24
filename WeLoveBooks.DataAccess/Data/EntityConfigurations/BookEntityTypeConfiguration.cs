@@ -14,10 +14,10 @@ internal class BookEntityTypeConfiguration : IEntityTypeConfiguration<Book>
             .HasForeignKey(b => b.AuthorId)
             .IsRequired();
 
-        builder
-            .HasOne(b => b.Photo)
-            .WithOne(p => p.PhotoRelation as Book)
-            .HasForeignKey<Photo>(p => p.Id)
-            .IsRequired(false);
+        //builder
+        //    .HasOne(b => b.Photo)
+        //    .WithOne(p => p.PhotoRelation as Book)
+        //    .HasForeignKey<Photo>(p => p.Id)
+        //    .IsRequired(false);
     }
 }

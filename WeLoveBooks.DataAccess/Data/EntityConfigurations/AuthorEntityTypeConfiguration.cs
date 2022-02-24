@@ -8,11 +8,11 @@ internal class AuthorEntityTypeConfiguration : IEntityTypeConfiguration<Author>
 {
     public void Configure(EntityTypeBuilder<Author> builder)
     {
-        builder
-            .HasOne(a => a.Photo)
-            .WithOne(p => p.PhotoRelation as Author)
-            .HasForeignKey(typeof(Photo), "Id")
-            .IsRequired(false);
+        //builder
+        //    .HasOne(a => a.Photo)
+        //    .WithOne(p => p.PhotoRelation as Author)
+        //    .HasForeignKey(typeof(Photo), "Id")
+        //    .IsRequired(false);
 
         builder
             .HasMany(a => a.Books)

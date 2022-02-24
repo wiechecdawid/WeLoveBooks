@@ -3,6 +3,7 @@ using WeLoveBooks.DataAccess.Data;
 using WeLoveBooks.Infrastructure.Interfaces;
 using WeLoveBooks.Infrastructure.PhotoAccessor;
 using WeLoveBooks.PhotoBroker.Interfaces;
+using WeLoveBooks.PhotoBroker.Middleware;
 using WeLoveBooks.PhotoBroker.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
