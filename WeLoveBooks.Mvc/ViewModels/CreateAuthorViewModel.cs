@@ -6,4 +6,5 @@ public class CreateAuthorViewModel
     public string LastName { get; set; }
     public string Bio { get; set; }
     public DateTime DateOfBirth { get; set; }
+    public PhotoViewModel? Photo { get; set; }
 }

@@ -9,6 +9,7 @@ namespace WeLoveBooks.Mvc.ViewModels
         public string Description { get; set; }
         public DateTime CreatedDate { get; set; }
         public Author Author { get; set; }
+        public PhotoViewModel? Photo { get; set; }
         public IEnumerable<ReviewListViewModel> Reviews { get; set; }
         public int ReviewCount => Reviews is not null ? Reviews.Count() : 0;
         public string AuthorName => $"{Author.FirstName} {Author.LastName}";

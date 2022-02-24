@@ -9,5 +9,6 @@ public class CreateBookViewModel
     public string Description { get; set; }
     public DateTime CreatedDate { get; set; }
     public string Author { get; set; }
+    public PhotoViewModel? Photo { get; set; }
     public IEnumerable<SelectListItem> Authors { get; set; }
 }

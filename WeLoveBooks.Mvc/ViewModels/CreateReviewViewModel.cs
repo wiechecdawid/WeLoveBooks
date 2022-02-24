@@ -11,4 +11,5 @@ public class CreateReviewViewModel
     public IEnumerable<Book> Books { get; set; }
     public string UserName { get; set; }
     public DateTime CreatedDate { get; set; }
+    public PhotoViewModel? Photo { get; set; }
 }
