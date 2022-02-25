@@ -12,6 +12,7 @@ public class ReviewPageViewModel
     public AppUser AppUser { get; set; }
     public string BookId { get; set; }
     public IEnumerable<Comment> Comments { get; set; }
+    public PhotoViewModel? Photo { get; set; }
     public string UserFullName => (AppUser.FirstName is not null && AppUser.LastName is not null) ? $"{AppUser.FirstName} {AppUser.LastName}" :
         AppUser.UserName;
 }

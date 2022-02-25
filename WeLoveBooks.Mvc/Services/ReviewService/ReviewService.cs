@@ -10,16 +10,16 @@ public class ReviewService : IReviewService
     private AppDbContext _context;
     private static Dictionary<int, string> _verdictMap;
 
-    public ReviewService(AppDbContext context)
+    public ReviewService(AppDbContext context, IConfiguration config)
     {
         _context = context;
         _verdictMap = new Dictionary<int, string>
         {
-            { 1, "Bardzo słaba" },
-            { 2, "Słaba" },
-            { 3, "Średnia" },
-            { 4, "Dobraa" },
-            { 5, "Bardzo dobra" }
+            { 1, config["BookRates:PL:VeryPoor"] },
+            { 2, config["BookRates:PL:Poor"] },
+            { 3, config["BookRates:PL:Mediocre"] },
+            { 4, config["BookRates:PL:Good"] },
+            { 5, config["BookRates:PL:VeryGood"] }
         };
     }
 
@@ -65,6 +65,7 @@ public class ReviewService : IReviewService
         var review = _context.Reviews
             .Where(r => r.Id == guidId)
             .Include(r => r.AppUser)
+            .ThenInclude(u => u.Photo)
             .Include(r => r.BookRate)
             .FirstOrDefault();
 
@@ -78,7 +79,21 @@ public class ReviewService : IReviewService
             Title = review.Title,
             Content = review.Content,
             AppUser = review.AppUser,
-            Verdict = GetVerdict(review.BookRate.Verdict)
+            Verdict = GetVerdict(review.BookRate.Verdict),
+            Photo = GetPhoto(review.AppUser.Photo)
+        };
+    }
+
+    private PhotoViewModel? GetPhoto(Photo? photo)
+    {
+        if (photo is null)
+            return null;
+
+        return new PhotoViewModel
+        {
+            Id = photo.Id,
+            Url = photo.Url,
+            Type = (int)photo.Type
         };
     }
 
