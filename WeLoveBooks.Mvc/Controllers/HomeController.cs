@@ -29,11 +29,18 @@ namespace WeLoveBooks.Mvc.Controllers
             {
                 Books = _context.Books
                     .Include(b => b.Author)
+                    .Include(b => b.Photo)
                     .OrderByDescending(b => b.CreatedDate)
                     .Select(b => _converter.Convert(b))
                     .Take(5)
                     .ToList(),
-                Authors = _context.Authors.OrderByDescending(a => a.LastName).Take(5).ToList(),
+
+                Authors = _context.Authors
+                .Include(a => a.Photo)    
+                .OrderByDescending(a => a.LastName)
+                    .Take(5)
+                    .ToList(),
+
                 Reviews = _reviewService.GetLatestReviews()
             };
 

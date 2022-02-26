@@ -25,6 +25,7 @@ public class BooksController : Controller
     {
         var model = _context.Books
             .Include(b => b.Author)
+            .Include(b => b.Photo)
             .Select(b => _converter.Convert(b))
             .ToList();
 
@@ -35,6 +36,7 @@ public class BooksController : Controller
     public IActionResult Details(string id)
     {
         var book = _context.Books.Include(b => b.Author)
+            .Include(b => b.Photo)
             .Include(b => b.Reviews)
             .ThenInclude(r => r.AppUser)
             .FirstOrDefault(b => b.Id.ToString() == id);
@@ -61,7 +63,25 @@ public class BooksController : Controller
     [HttpPost("Admin/[controller]/[action]")]
     public async Task<IActionResult> Create(CreateBookViewModel model)
     {
-        Author author = _context.Authors.Where(a => a.Id.ToString() == model.Author).FirstOrDefault();
+        var author = _context.Authors
+            .Where(a => a.Id.ToString() == model.Author)
+            .FirstOrDefault();
+
+        if (author is null)
+            return BadRequest("The author does not exist");
+
+        Photo? photo = null;
+
+        if(model.Photo is not null)
+        {
+            photo = new Photo
+            {
+                Id = model.Photo.Id,
+                Type = (PhotoType)model.Photo.Type,
+                Url = model.Photo.Url
+            };
+        }
+
         Book book = new()
         {
             Title = model.Title,
@@ -69,7 +89,8 @@ public class BooksController : Controller
             Description = model.Description,
             Id = Guid.NewGuid(),
             AuthorId = author.Id,
-            CreatedDate = model.CreatedDate
+            CreatedDate = model.CreatedDate,
+            Photo = photo
         };
 
         _context.Books.Add(book);
@@ -92,10 +113,22 @@ public class BooksController : Controller
 
         var book = _context.Books.Where(b => b.Id.ToString() == id)
             .Include(b => b.Author)
+            .Include(b => b.Photo)
             .FirstOrDefault();
 
         if (book is null)
             return NotFound();
+
+        PhotoViewModel? photo = null;
+        if(book.Photo is not null)
+        {
+            photo = new PhotoViewModel
+            {
+                Id = book.Photo.Id,
+                Url = book.Photo.Url,
+                Type = (int)book.Photo.Type
+            };
+        }
 
         CreateBookViewModel model = new()
         {
@@ -103,7 +136,8 @@ public class BooksController : Controller
             Author = book.Author.Id.ToString(),
             Description = book.Description,
             CreatedDate = book.CreatedDate,
-            Title = book.Title
+            Title = book.Title,
+            Photo = photo
         };
 
         return View(model);
@@ -113,7 +147,7 @@ public class BooksController : Controller
     [HttpPost("Admin/[controller]/[action]/{id}")]
     public async Task<IActionResult> Edit(string id, CreateBookViewModel model)
     {
-        Author author = _context.Authors.Where(a => a.Id.ToString() == model.Author).FirstOrDefault();
+        Author author = _context.Authors.Where(a => a.Id.ToString() == model.Author).FirstOrDefault()!;
 
         var book = _context.Books.Where(a => a.Id.ToString() == id).FirstOrDefault();
 

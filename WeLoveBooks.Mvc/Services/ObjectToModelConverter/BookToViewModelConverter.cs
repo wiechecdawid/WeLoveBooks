@@ -23,6 +23,9 @@ public class BookToViewModelConverter : IObjectToModelConverter<Book, BookViewMo
                 });
             }
         }
+
+        var photo = GetPhotoVeiwModel(book.Photo);
+
         return new BookViewModel
         {
             Title = book.Title,
@@ -30,7 +33,21 @@ public class BookToViewModelConverter : IObjectToModelConverter<Book, BookViewMo
             Author = book.Author,
             CreatedDate = book.CreatedDate,
             Id = book.Id.ToString(),
-            Reviews = reviews
+            Reviews = reviews,
+            Photo = photo
+        };
+    }
+
+    private PhotoViewModel? GetPhotoVeiwModel(Photo? photo)
+    {
+        if (photo is null)
+            return null;
+
+        return new PhotoViewModel
+        {
+            Id = photo.Id,
+            Type = (int)photo.Type,
+            Url = photo.Url
         };
     }
 }
