@@ -30,6 +30,7 @@ public class ReviewService : IReviewService
             .Take(5)
             .Include(r => r.BookRate)
             .Include(r => r.AppUser)
+            .ThenInclude(u => u.Photo)
             .Include(r => r.BookRate)
             .ToList();
 
@@ -113,6 +114,7 @@ public class ReviewService : IReviewService
         UserName = r.AppUser.UserName,
         CreatedDate = r.CreatedDate,
         BookTitle = r.Book.Title,
+        PhotoUrl = r.AppUser.Photo?.Url,
         Verdict = GetVerdict(r.BookRate?.Verdict)
     };
 

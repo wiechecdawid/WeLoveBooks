@@ -5,7 +5,19 @@
 }
 
 <h1>@Model.Title</h1>
-<h5>@Model.UserFullName</h5>
+<div class="user-review">
+	<div class="d-inline col-lg-1 col-md-2 col-sm-1 user-image">
+		@if(Model.Photo is not null)
+		{
+			<img src="@Model.Photo.Url" class="img-fluid rounded-start" alt="user logo">
+		}
+		else
+		{
+			<img src="~/img/profileavatar.jpg" class="img-fluid rounded-start" alt="user logo">
+		}
+	</div>
+	<h5 class="d-inline col-lg-2">@Model.UserFullName</h5>
+</div>
 <div>
 	@Html.Raw(Model.Content.Replace(Environment.NewLine, "<br/>"))
 </div>

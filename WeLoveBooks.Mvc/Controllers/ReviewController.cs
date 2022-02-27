@@ -35,8 +35,21 @@ public class ReviewController : Controller
         var review = _context.Reviews
             .Where(r => r.Id == guidId)
             .Include(r => r.AppUser)
+            .ThenInclude(u => u.Photo)
             .FirstOrDefault();
         if (review is null) return BadRequest("Could not find review");
+
+        PhotoViewModel? photo = null;
+
+        if(review.AppUser.Photo is not null)
+        {
+            photo = new PhotoViewModel
+            {
+                Id = review.AppUser.Photo.Id,
+                Url = review.AppUser.Photo.Url,
+                Type = (int)review.AppUser.Photo.Type
+            };
+        }
 
         return View(new ReviewPageViewModel
         {
@@ -44,7 +57,8 @@ public class ReviewController : Controller
             BookId = review.BookId.ToString(),
             Title = review.Title,
             Content = review.Content,
-            AppUser = review.AppUser
+            AppUser = review.AppUser,
+            Photo = photo
         });
     }
 
