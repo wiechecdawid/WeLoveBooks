@@ -1,0 +1,15 @@
+﻿@model WeLoveBooks.Mvc.ViewModels.PhotoFormViewModel
+
+<form enctype="multipart/form-data" method="post">
+	@{
+		TempData["Id"] = Model.Id;
+		TempData["Type"] = Model.Type.ToString();
+	}
+
+	<div>
+		<label for="FileUpload_FormFile">File</label>
+		<input type="file" asp-for="File" />
+	</div>
+
+	<input class="btn" type="submit" asp-controller="Photo" asp-action="Add" value="Dodaj" />
+</form>

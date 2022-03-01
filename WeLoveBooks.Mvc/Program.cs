@@ -5,6 +5,7 @@ using WeLoveBooks.DataAccess.Data.Seeder;
 using WeLoveBooks.DataAccess.Models;
 using WeLoveBooks.Mvc.Middleware;
 using WeLoveBooks.Mvc.Services.ObjectToModelConverter;
+using WeLoveBooks.Mvc.Services.PhotoBrokerHttpClient;
 using WeLoveBooks.Mvc.Services.ReviewService;
 using WeLoveBooks.Mvc.ViewModels;
 
@@ -23,6 +24,11 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole(builder.Configuration["RoleNames:SiteAdmin"])  
 ));
 builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddHttpClient("PhotoBroker", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["PhotoBroker:Url"]);
+});
+builder.Services.AddScoped<IPhotoBrokerHttpClient, PhotoBrokerHttpClient>();
 
 var app = builder.Build();
 

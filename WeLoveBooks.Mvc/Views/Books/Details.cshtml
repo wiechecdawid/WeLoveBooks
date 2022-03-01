@@ -11,9 +11,23 @@
 
 <div class="card mb-3">
     <div class="row">
-        <div class="col-md-8">
-            <img src="~/img/randombook.jpg" class="img-fluid rounded-start" alt="booklogo">
-        </div>
+        <div class="d-inline col-lg-1 col-md-2 col-sm-1 user-image">
+		@if(Model.Photo is not null)
+		{
+			<img src="@Model.Photo.Url" class="img-fluid rounded-start" alt="user logo">
+		}
+		else
+		{
+			<img src="~/img/randombook.jpg" class="img-fluid rounded-start" alt="user logo">
+		}		
+		@if(User.IsInRole("Site Admin"))
+		{
+			TempData["Type"] = 0;
+			TempData["Id"] = Model.Id;
+
+			<a asp-controller="Photo" asp-action="Index" class="btn btn-sm btn-primary">Dodaj zdjęcie</a>
+		}
+	</div>
     </div>  
         <div class="card-body">
             <h3 class="card-title">@Model.Title</h3>
