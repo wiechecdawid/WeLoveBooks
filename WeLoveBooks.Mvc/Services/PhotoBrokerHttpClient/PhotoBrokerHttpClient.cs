@@ -6,7 +6,6 @@ namespace WeLoveBooks.Mvc.Services.PhotoBrokerHttpClient;
 public class PhotoBrokerHttpClient : IPhotoBrokerHttpClient
 {
     private readonly HttpClient _httpClient;
-    private const string photoController = "photo";
 
     public PhotoBrokerHttpClient(IHttpClientFactory clientFactory)
     {
@@ -41,16 +40,13 @@ public class PhotoBrokerHttpClient : IPhotoBrokerHttpClient
         return data;
     }
 
-    private string PrepareRequestUrl(params object[] queryParams)
+    private string PrepareRequestUrl(int type, string id)
     {        
         var queryString = new Dictionary<string, string?>();
 
-        foreach(var q in queryParams)
-        {
-            var key = nameof(q).ToLower();
-            queryString[key] = q.ToString();
-        }
+        queryString["type"] = type.ToString();
+        queryString["id"] = id;
 
-        return QueryHelpers.AddQueryString(photoController, queryString);
+        return QueryHelpers.AddQueryString(queryString);
     }
 }

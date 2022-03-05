@@ -30,15 +30,15 @@ public class PhotoController : Controller
     }
 
     [HttpPost("[controller]/Add")]
-    public IActionResult Add(PhotoFormViewModel model)
+    public IActionResult Add([FromForm]PhotoFormViewModel photoForm)
     {
-        var response = _httpClient.SendAsync(model);
+        var response = _httpClient.SendAsync(photoForm);
 
         if (!response.IsCompletedSuccessfully)
             TempData["Result"] = "Success";
         else
             TempData["Result"] = "Failure";
 
-        return Ok();
+        return RedirectToAction("Index", "Home");
     }
 }
