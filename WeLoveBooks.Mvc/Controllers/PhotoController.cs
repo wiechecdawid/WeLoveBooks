@@ -30,11 +30,11 @@ public class PhotoController : Controller
     }
 
     [HttpPost("[controller]/Add")]
-    public IActionResult Add([FromForm]PhotoFormViewModel photoForm)
+    public async Task<IActionResult> Add([FromForm]PhotoFormViewModel photoForm)
     {
-        var response = _httpClient.SendAsync(photoForm);
+        var response = await _httpClient.SendAsync(photoForm);
 
-        if (!response.IsCompletedSuccessfully)
+        if (response.IsSuccessStatusCode)
             TempData["Result"] = "Success";
         else
             TempData["Result"] = "Failure";

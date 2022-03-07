@@ -27,6 +27,7 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddHttpClient("PhotoBroker", client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["PhotoBroker:Url"]);
+    //client.DefaultRequestHeaders.Host = builder.Configuration["PhotoBroker:Host"];
 });
 builder.Services.AddScoped<IPhotoBrokerHttpClient, PhotoBrokerHttpClient>();
 

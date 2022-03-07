@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using WeLoveBooks.Mvc.ViewModels;
+using System.Net.Http.Headers;
 
 namespace WeLoveBooks.Mvc.Services.PhotoBrokerHttpClient;
 
 public class PhotoBrokerHttpClient : IPhotoBrokerHttpClient
 {
     private readonly HttpClient _httpClient;
+    private const string photoEndpoint = "api/photo";
 
     public PhotoBrokerHttpClient(IHttpClientFactory clientFactory)
     {
@@ -17,36 +19,45 @@ public class PhotoBrokerHttpClient : IPhotoBrokerHttpClient
         var requestUrl = PrepareRequestUrl(model.Type, model.Id);
 
         var request = new HttpRequestMessage(HttpMethod.Post, requestUrl);
+        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
 
-        var formData = new MultipartFormDataContent();
-        formData.Add(new ByteArrayContent(ReadFile(model.File)));
-        request.Content = formData;
+        using var content = CreateContent(model.File);
+        request.Content = content;
 
         var result = await _httpClient.SendAsync(request);
+        result.EnsureSuccessStatusCode();
 
         return result;
     }
 
-    private byte[] ReadFile(IFormFile file)
+    private MultipartFormDataContent CreateContent(IFormFile file)
     {
-        byte[] data;
+        if (file is null || file.Length <= 0)
+            throw new ArgumentNullException("File is null or empty");
 
-        if (file is null || file.Length == 0)
-            throw new ArgumentNullException("The file cannot be null");
+        var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition)
+            .FileName?.Trim('"');
 
-        using var reader = new BinaryReader(file.OpenReadStream());
-        data = reader.ReadBytes((int)file.OpenReadStream().Length);
+       var content = new MultipartFormDataContent();
+        content.Add(new StreamContent(file.OpenReadStream())
+        {
+            Headers =
+            {
+                ContentLength = file.Length,
+                ContentType = new MediaTypeHeaderValue(file.ContentType)
+            }
+        }, "File", fileName);
 
-        return data;
+        return content;
     }
 
     private string PrepareRequestUrl(int type, string id)
     {        
         var queryString = new Dictionary<string, string?>();
 
-        queryString["type"] = type.ToString();
         queryString["id"] = id;
+        queryString["type"] = type.ToString();
 
-        return QueryHelpers.AddQueryString(queryString);
+        return QueryHelpers.AddQueryString(photoEndpoint, queryString);
     }
 }

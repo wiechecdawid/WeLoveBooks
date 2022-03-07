@@ -19,9 +19,11 @@ namespace WeLoveBooks.PhotoBroker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromQuery]int type,
+        public async Task<IActionResult> Add(
+            [FromQuery]int type,
             [FromQuery]string id,
             [FromForm]IFormFile file,
+            //[FromForm]AddPhotoDto addPhotoDto,
             CancellationToken token)
         {
             var addPhotoDto = new AddPhotoDto
@@ -30,6 +32,8 @@ namespace WeLoveBooks.PhotoBroker.Controllers
                 ForeignKeyId = id,
                 File = file
             };
+            // addPhotoDto.PhotoType = (Dtos.PhotoType)type;
+            // addPhotoDto.ForeignKeyId = id;
 
             Photo photo;
 
