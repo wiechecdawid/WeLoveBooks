@@ -1,0 +1,49 @@
+﻿@using System.Globalization
+@model IEnumerable<AuthorViewModel>
+@{
+	ViewData["Title"] = "Authors";
+}
+
+<h1>Authors</h1>
+
+<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+    <div class="accordion-body">
+    @foreach(var author in Model)
+    {
+        <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+            <div class="col-md-4">
+                @if(author.Photo is not null)
+                {
+                    <img src=@author.Photo.Url class="img-fluid rounded-start" alt="booklogo">
+                }
+                else
+                {
+                    <img src="~/img/profileavatar.jpg" class="img-fluid rounded-start" alt="booklogo">
+                } 
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@author.FullName</h5>
+                    <p class="card-text">@author.ShortBio</p>
+                    <a asp-controller="Books" asp-action="Details" asp-route-id="@author.Id">Więcej</a>
+                    <p class="card-text"><small class="text-muted">Data urodzenia: @author.DateOfBirth.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("pl-PL"))</small></p>
+                    <p class="card-text"><small class="text-muted">@author.BooksCount książek</small></p>
+                </div>
+            </div>
+            @if(User.IsInRole("Site Admin"))
+            {
+                <a asp-controller="Authors" asp-action="Delete" asp-route-id="@author.Id" class="btn btn-sm btn-danger" >Usuń</a>
+            }
+            </div>
+        </div>
+    }
+    @*TODO: Find another way of validating admin role*@
+    @if(User.IsInRole("Site Admin"))
+    {
+        <form method="get">    
+            <button class="btn btn-md btn-primary" asp-controller="Authors" asp-action="Create" >Dodaj autora</button>
+        </form>        
+    }
+    </div>
+</div>

@@ -13,7 +13,14 @@
         <div class="card mb-3" style="max-width: 540px;">
             <div class="row g-0">
             <div class="col-md-4">
-                <img src="~/img/randombook.jpg" class="img-fluid rounded-start" alt="booklogo">
+                @if(book.Photo is not null)
+                {
+                    <img src=@book.Photo.Url class="img-fluid rounded-start" alt="booklogo">
+                }
+                else
+                {
+                    <img src="~/img/randombook.jpg" class="img-fluid rounded-start" alt="booklogo">
+                } 
             </div>
             <div class="col-md-8">
                 <div class="card-body">

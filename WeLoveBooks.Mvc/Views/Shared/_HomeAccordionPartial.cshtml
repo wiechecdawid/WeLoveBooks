@@ -88,6 +88,8 @@
               </div>
             </div>
         }
+
+        <a asp-controller="Authors" asp-action="Index">Więcej...</a>
         @*TODO: Find another way of validating admin role*@
         @if(User.IsInRole("Site Admin"))
         {

@@ -46,48 +46,56 @@ public class Seeder: ISeeder
             {
                 FirstName = "Edgar Allan",
                 LastName = "Poe",
-                DateOfBirth = new DateTime(1809, 1, 19)
+                DateOfBirth = new DateTime(1809, 1, 19),
+                Bio = "First sentence. Second Sentence. Third Sentence.",
+                Books = new List<Book>()
             };
 
             Author author2 = new()
             {
                 FirstName = "Jeff",
                 LastName = "VanderMeer",
-                DateOfBirth = new DateTime(1968, 2, 7)
+                DateOfBirth = new DateTime(1968, 2, 7),
+                Bio = "First sentence. Second sentence. Third Sentence.",
+                Books = new List<Book>()
             };
 
             await context.Authors.AddRangeAsync(author1, author2);
-            await context.SaveChangesAsync();
         }
 
         if (!context.Books.Any())
         {
-            var a1 = context.Authors.ToList();
-            var a2 = context.Authors.Where(a => a.LastName == "Poe").ToList().FirstOrDefault();
+            var a1 = context.Authors.Where(a => a.LastName == "VanderMeer").FirstOrDefault();
+            var a2 = context.Authors.Where(a => a.LastName == "Poe").FirstOrDefault();
 
             Book book1 = new()
             {
                 AuthorId = a1[0].Id,
                 Title = "Unicestwienie",
-                CreatedDate = new DateTime(2014, 2, 4)
+                CreatedDate = new DateTime(2014, 2, 4),
+                Description = "First sentence. Second sentence. Third Sentence.",
+                Reviews = new List<Review>()
             };
 
             Book book2 = new()
             {
                 AuthorId = a1[0].Id,
                 Title = "Ujarzmienie",
-                CreatedDate = new DateTime(2014, 5, 6)
+                CreatedDate = new DateTime(2014, 5, 6),
+                Description = "First sentence. Second sentence. Third Sentence.",
+                Reviews = new List<Review>()
             };
 
             Book book3 = new()
             {
                 AuthorId = a2.Id,
                 Title = "Kruk",
-                CreatedDate = new DateTime(1845, 1, 29)
+                CreatedDate = new DateTime(1845, 1, 29),
+                Description = "First sentence. Second sentence. Third Sentence.",
+                Reviews = new List<Review>()
             };
 
             await context.Books.AddRangeAsync(book1, book2, book3);
-            await context.SaveChangesAsync();
         }
 
         if (!context.Reviews.Any())
@@ -118,7 +126,8 @@ public class Seeder: ISeeder
             };
 
             await context.Reviews.AddRangeAsync(review1, review2, review3);
-            await context.SaveChangesAsync();
         }
+
+        await context.SaveChangesAsync();
     }
 }

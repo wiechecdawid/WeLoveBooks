@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ISeeder, Seeder>();
 builder.Services.AddScoped<IObjectToModelConverter<Book, BookViewModel>, BookToViewModelConverter>();
+builder.Services.AddScoped<IObjectToModelConverter<Author, AuthorViewModel>, AuthorToViewModel>();
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(
    builder.Configuration.GetConnectionString("Default")));
 
@@ -27,7 +28,6 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddHttpClient("PhotoBroker", client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["PhotoBroker:Url"]);
-    //client.DefaultRequestHeaders.Host = builder.Configuration["PhotoBroker:Host"];
 });
 builder.Services.AddScoped<IPhotoBrokerHttpClient, PhotoBrokerHttpClient>();
 
