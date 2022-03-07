@@ -18,7 +18,7 @@ public class Seeder: ISeeder
 
     public async Task Initialize()
     {
-        using var context = _services.GetService<AppDbContext>();
+        await using var context = _services.GetService<AppDbContext>();
         await context!.Database.MigrateAsync();
         await Seed(context);
     }
