@@ -1,0 +1,67 @@
+﻿@using System.Globalization
+@model WeLoveBooks.Mvc.ViewModels.AuthorViewModel
+
+@{
+	ViewData["Title"] = $"{Model.FullName} - details";
+}
+
+@{
+    TempData["AuthorId"] = Model.Id;
+}
+
+<div class="card mb-3">
+    <div class="row">
+        <div>
+			@if(Model.Photo is not null)
+			{
+				<img src="@Model.Photo.Url" class="img-fluid rounded-start" alt="user logo">
+			}
+			else
+			{
+				<img src="~/img/randombook.jpg" class="img-fluid rounded-start" alt="user logo">
+			}		
+			@if(User.IsInRole("Site Admin"))
+			{
+				var photoForm = new PhotoFormViewModel
+				{
+					Id = Model.Id,
+					Type = 0
+				};
+
+				<button class="btn btn-sm btn-primary" id="enable-image-form">Dodaj zdjęcie</button>
+				
+				<div id="image-form" >
+					<partial name="_PhotoForm" for=@photoForm />
+				</div>
+			}
+		</div>
+    </div>  
+    <div class="card-body">
+        <h3 class="card-title">@Model.FullName</h3>
+        <div>
+            @Html.Raw(Model.Bio.Replace(Environment.NewLine, "<br/>"))
+        </div>
+        <p class="card-text"><small class="text-muted">Data urodzenia: @Model.DateOfBirth.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("pl-PL"))</small></p>
+    </div>
+</div>
+
+<h2>Książki</h2>
+
+<partial name="_BookListPartial" for="Books" />
+
+<script>
+	const form = document.getElementById("image-form")
+	const button = document.getElementById("enable-image-form")
+
+	form.style.visibility = 'hidden'
+
+	button.addEventListener('click', function(){
+		if(form.style.visibility === 'hidden') {
+			form.style.visibility = 'visible'
+		} else {
+			form.style.visibility = 'hidden'
+		}
+	})
+
+	button.addEventListener('click', )
+</script><

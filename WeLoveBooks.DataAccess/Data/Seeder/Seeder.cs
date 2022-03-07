@@ -70,7 +70,7 @@ public class Seeder: ISeeder
 
             Book book1 = new()
             {
-                AuthorId = a1[0].Id,
+                AuthorId = a1.Id,
                 Title = "Unicestwienie",
                 CreatedDate = new DateTime(2014, 2, 4),
                 Description = "First sentence. Second sentence. Third Sentence.",
@@ -79,7 +79,7 @@ public class Seeder: ISeeder
 
             Book book2 = new()
             {
-                AuthorId = a1[0].Id,
+                AuthorId = a1.Id,
                 Title = "Ujarzmienie",
                 CreatedDate = new DateTime(2014, 5, 6),
                 Description = "First sentence. Second sentence. Third Sentence.",

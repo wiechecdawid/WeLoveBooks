@@ -32,6 +32,21 @@ public class AuthorsController : Controller
         return View("Index", model);
     }
 
+    [HttpGet("[controller]/{id}")]
+    public IActionResult Details(string id)
+    {
+        var author = _context.Authors.Include(a => a.Books)
+            .Include(b => b.Photo)
+            .FirstOrDefault(b => b.Id.ToString() == id);
+
+        if (author == null)
+            return BadRequest("No such author");
+
+        var model = _converter.Convert(author);
+
+        return View(model);
+    }
+
 
     [Authorize(Policy = "SiteAdmin")]
     [HttpGet("Admin/[controller]/[action]")]

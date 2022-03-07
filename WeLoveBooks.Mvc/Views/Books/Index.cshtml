@@ -1,51 +1,8 @@
-﻿@using System.Globalization
-@model IEnumerable<BookViewModel>
+﻿@model IEnumerable<BookViewModel>
 @{
 	ViewData["Title"] = "Books";
 }
 
-<h1>Books</h1>
+<h1>Książki</h1>
 
-<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-    <div class="accordion-body">
-    @foreach(var book in Model)
-    {
-        <div class="card mb-3" style="max-width: 540px;">
-            <div class="row g-0">
-            <div class="col-md-4">
-                @if(book.Photo is not null)
-                {
-                    <img src=@book.Photo.Url class="img-fluid rounded-start" alt="booklogo">
-                }
-                else
-                {
-                    <img src="~/img/randombook.jpg" class="img-fluid rounded-start" alt="booklogo">
-                } 
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">@book.Title</h5>
-                    <p class="card-text"><small class="text-muted">@book.Author</small></p>
-                    <p class="card-text">@book.ShortDescription</p>
-                    <a asp-controller="Books" asp-action="Details" asp-route-id="@book.Id">Więcej</a>
-                    <p class="card-text"><small class="text-muted">Data wydania: @book.CreatedDate.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("pl-PL"))</small></p>
-                    <p class="card-text"><small class="text-muted">@book.ReviewCount recenzji</small></p>
-                </div>
-            </div>
-            @if(User.IsInRole("Site Admin"))
-            {
-                <a asp-controller="Books" asp-action="Edit" asp-route-id="@book.Id" class="btn btn-sm btn-primary" >Edytuj</a>
-                <a asp-controller="Books" asp-action="Delete" asp-route-id="@book.Id" class="btn btn-sm btn-danger" >Usuń</a>
-            }
-            </div>
-        </div>
-    }
-    @*TODO: Find another way of validating admin role*@
-    @if(User.IsInRole("Site Admin"))
-    {
-        <form method="get">    
-            <button class="btn btn-md btn-primary" asp-controller="Books" asp-action="Create" >Dodaj książkę</button>
-        </form>        
-    }
-    </div>
-</div>
+<partial name="_BookListPartial" for=@Model />
