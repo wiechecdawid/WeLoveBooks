@@ -144,7 +144,6 @@ public class Seeder: ISeeder
                     Verdict = Verdict.Neutral
                 },
                 Content = "Przeciętna książka. Na szczęście nie jest zbyt długa. Można poczytać."
-                Content = "Przeciętna książka. Na szczęście nie jest zbyt długa. Można poczytać."
             };
 
             await context.Reviews.AddRangeAsync(review1, review2, review3);
