@@ -65,8 +65,8 @@ public class Seeder: ISeeder
 
         if (!context.Books.Any())
         {
-            var a1 = context.Authors.Where(a => a.LastName == "VanderMeer").FirstOrDefault();
-            var a2 = context.Authors.Where(a => a.LastName == "Poe").FirstOrDefault();
+            var a1 = context.Authors.FirstOrDefault(a => a.LastName == "VanderMeer");
+            var a2 = context.Authors.FirstOrDefault(a => a.LastName == "Poe");
 
             Book book1 = new()
             {
@@ -108,21 +108,43 @@ public class Seeder: ISeeder
             {
                 BookId = b1.Id,
                 Title = "Unicestwienie",
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                AppUser = context.Users.FirstOrDefault(),
+                BookRate = new BookRate()
+                {
+                    Id = Guid.NewGuid(),
+                    Verdict = Verdict.VeryGood
+                },
+                Content = "Bardzo dobra książka. Polecam ją każdemu fanowi Jeffa. Pozycja obowiązkowa"
             };
 
             Review review2 = new()
             {
                 BookId = b2.Id,
                 Title = "Ujarzmienie",
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                AppUser = context.Users.FirstOrDefault(),
+                BookRate = new BookRate()
+                {
+                    Id = Guid.NewGuid(),
+                    Verdict = Verdict.VeryBad
+                },
+                Content = "Nie polecam. Przez pierwsze pół książki nic się nie dzieje, a potem dla odmiany nic się nie dzieje. Zmarnowany wieczór."
             };
 
             Review review3 = new()
             {
                 BookId = b3.Id,
                 Title = "Kruk",
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                AppUser = context.Users.FirstOrDefault(),
+                BookRate = new BookRate()
+                {
+                    Id = Guid.NewGuid(),
+                    Verdict = Verdict.Neutral
+                },
+                Content = "Przeciętna książka. Na szczęście nie jest zbyt długa. Można poczytać."
+                Content = "Przeciętna książka. Na szczęście nie jest zbyt długa. Można poczytać."
             };
 
             await context.Reviews.AddRangeAsync(review1, review2, review3);
