@@ -3,6 +3,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 using WeLoveBooks.DataAccess.Data;
 using WeLoveBooks.DataAccess.Models;
 using WeLoveBooks.Mvc.Services.ReviewService;
@@ -84,7 +85,7 @@ public class ReviewServiceTests
         context.Setup(c => c.Books).Returns(booksMock.Object);
         context.Setup(c => c.Users).Returns(usersMock.Object);
 
-        var reviewService = new ReviewService(context.Object);
+        var reviewService = new ReviewService(context.Object, new Mock<IConfiguration>().Object);
 
         return reviewService;
     }
