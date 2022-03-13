@@ -21,12 +21,6 @@ public class ReviewController : Controller
         _userManager = userManager;
     }
 
-    [HttpGet("[controller]/Index")]
-    public IActionResult Index()
-    {
-        return View();
-    }
-
     [HttpGet("[controller]/[action]/{id}")]
     public IActionResult Details(string id)
     {
