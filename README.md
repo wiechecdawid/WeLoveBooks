@@ -15,7 +15,9 @@ In Order to run the program locally, **you need to have your Super Admin usernam
     "Email": <your secret email>,
     "Password": <your secret password>
   },
-  "Token": <long token>
+  "Token": {
+    "SecretKey": <long key>
+  }
 }
 ```
 You also need to have your instance of the database (please find the *script.sql* file stored in the DataAccess project).
