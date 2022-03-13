@@ -71,6 +71,7 @@ public class Seeder: ISeeder
             Book book1 = new()
             {
                 AuthorId = a1.Id,
+                Author = a1,
                 Title = "Unicestwienie",
                 CreatedDate = new DateTime(2014, 2, 4),
                 Description = "First sentence. Second sentence. Third Sentence.",
@@ -80,6 +81,7 @@ public class Seeder: ISeeder
             Book book2 = new()
             {
                 AuthorId = a1.Id,
+                Author = a1,
                 Title = "Ujarzmienie",
                 CreatedDate = new DateTime(2014, 5, 6),
                 Description = "First sentence. Second sentence. Third Sentence.",
@@ -89,6 +91,7 @@ public class Seeder: ISeeder
             Book book3 = new()
             {
                 AuthorId = a2.Id,
+                Author = a2,
                 Title = "Kruk",
                 CreatedDate = new DateTime(1845, 1, 29),
                 Description = "First sentence. Second sentence. Third Sentence.",
@@ -107,6 +110,7 @@ public class Seeder: ISeeder
             Review review1 = new()
             {
                 BookId = b1.Id,
+                Book = b2,
                 Title = "Unicestwienie",
                 CreatedDate = DateTime.Now,
                 AppUser = context.Users.FirstOrDefault(),
@@ -123,7 +127,7 @@ public class Seeder: ISeeder
                 BookId = b2.Id,
                 Title = "Ujarzmienie",
                 CreatedDate = DateTime.Now,
-                AppUser = context.Users.FirstOrDefault(),
+                AppUser = context.Users.FirstOrDefault()!,
                 BookRate = new BookRate()
                 {
                     Id = Guid.NewGuid(),
@@ -137,7 +141,7 @@ public class Seeder: ISeeder
                 BookId = b3.Id,
                 Title = "Kruk",
                 CreatedDate = DateTime.Now,
-                AppUser = context.Users.FirstOrDefault(),
+                AppUser = context.Users.FirstOrDefault()!,
                 BookRate = new BookRate()
                 {
                     Id = Guid.NewGuid(),
