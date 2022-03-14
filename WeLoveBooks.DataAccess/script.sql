@@ -433,19 +433,19 @@ GO
 
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
 BEGIN
-    ALTER TABLE [Books] ADD [PhotoId] nvarchar(450) NULL;
+    ALTER TABLE [Books] ADD [PhotoId] nvarchar(450) NULL DEFAULT N'';
 END;
 GO
 
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
 BEGIN
-    ALTER TABLE [Authors] ADD [PhotoId] nvarchar(450) NULL;
+    ALTER TABLE [Authors] ADD [PhotoId] nvarchar(450) NULL DEFAULT N'';
 END;
 GO
 
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220125232254_PhotoEntityAdded')
 BEGIN
-    ALTER TABLE [AspNetUsers] ADD [PhotoId] nvarchar(450) NULL ;
+    ALTER TABLE [AspNetUsers] ADD [PhotoId] nvarchar(450) NULL DEFAULT N'';
 END;
 GO
 
@@ -500,6 +500,127 @@ IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'2022
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
     VALUES (N'20220125232254_PhotoEntityAdded', N'6.0.0');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    ALTER TABLE [AspNetUsers] DROP CONSTRAINT [FK_AspNetUsers_Photos_PhotoId];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    ALTER TABLE [Authors] DROP CONSTRAINT [FK_Authors_Photos_PhotoId];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    ALTER TABLE [BookRates] DROP CONSTRAINT [FK_BookRates_Reviews_BookRateId];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    ALTER TABLE [Books] DROP CONSTRAINT [FK_Books_Photos_PhotoId];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    DROP INDEX [IX_BookRates_BookRateId] ON [BookRates];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    DECLARE @var1 sysname;
+    SELECT @var1 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[BookRates]') AND [c].[name] = N'BookRateId');
+    IF @var1 IS NOT NULL EXEC(N'ALTER TABLE [BookRates] DROP CONSTRAINT [' + @var1 + '];');
+    ALTER TABLE [BookRates] DROP COLUMN [BookRateId];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    DECLARE @var2 sysname;
+    SELECT @var2 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Books]') AND [c].[name] = N'PhotoId');
+    IF @var2 IS NOT NULL EXEC(N'ALTER TABLE [Books] DROP CONSTRAINT [' + @var2 + '];');
+    ALTER TABLE [Books] ALTER COLUMN [PhotoId] nvarchar(450) NULL;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    DECLARE @var3 sysname;
+    SELECT @var3 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Authors]') AND [c].[name] = N'PhotoId');
+    IF @var3 IS NOT NULL EXEC(N'ALTER TABLE [Authors] DROP CONSTRAINT [' + @var3 + '];');
+    ALTER TABLE [Authors] ALTER COLUMN [PhotoId] nvarchar(450) NULL;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    DECLARE @var4 sysname;
+    SELECT @var4 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[AspNetUsers]') AND [c].[name] = N'PhotoId');
+    IF @var4 IS NOT NULL EXEC(N'ALTER TABLE [AspNetUsers] DROP CONSTRAINT [' + @var4 + '];');
+    ALTER TABLE [AspNetUsers] ALTER COLUMN [PhotoId] nvarchar(450) NULL;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    CREATE UNIQUE INDEX [IX_Reviews_BookRateId] ON [Reviews] ([BookRateId]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    ALTER TABLE [AspNetUsers] ADD CONSTRAINT [FK_AspNetUsers_Photos_PhotoId] FOREIGN KEY ([PhotoId]) REFERENCES [Photos] ([Id]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    ALTER TABLE [Authors] ADD CONSTRAINT [FK_Authors_Photos_PhotoId] FOREIGN KEY ([PhotoId]) REFERENCES [Photos] ([Id]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    ALTER TABLE [Books] ADD CONSTRAINT [FK_Books_Photos_PhotoId] FOREIGN KEY ([PhotoId]) REFERENCES [Photos] ([Id]);
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    ALTER TABLE [Reviews] ADD CONSTRAINT [FK_Reviews_BookRates_BookRateId] FOREIGN KEY ([BookRateId]) REFERENCES [BookRates] ([Id]) ON DELETE CASCADE;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220314204119_StrangeConstraint')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20220314204119_StrangeConstraint', N'6.0.0');
 END;
 GO
 

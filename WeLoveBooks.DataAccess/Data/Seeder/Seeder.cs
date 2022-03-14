@@ -25,19 +25,27 @@ public class Seeder: ISeeder
 
     private async Task Seed(AppDbContext context)
     {
+        var role_RegularUser = _config["RoleNames:RegularUser"];
         var userManager = _services.GetService<UserManager<AppUser>>();
 
         if(userManager.Users.Count() < 2)
         {
             AppUser user = new()
             {
+                Id = Guid.NewGuid().ToString(),
                 Email = "testUser@test.com",
+                UserName = "testUser@test.com",
                 FirstName = "Jan",
                 LastName = "Kowalski"
             };
 
-            await userManager.CreateAsync(user, "Test");
-            await userManager.AddToRoleAsync(user, _config["RoleNames:RegularUser"]);
+            var result = await userManager.CreateAsync(user, "P@ssvv0rd");
+
+            if (result.Succeeded)
+            {
+                var savedUser = await userManager.FindByEmailAsync(user.Email);
+                await userManager.AddToRoleAsync(savedUser, role_RegularUser);
+            }
         }
 
         if(!context.Authors.Any())
@@ -65,8 +73,8 @@ public class Seeder: ISeeder
 
         if (!context.Books.Any())
         {
-            var a1 = context.Authors.FirstOrDefault(a => a.LastName == "VanderMeer");
-            var a2 = context.Authors.FirstOrDefault(a => a.LastName == "Poe");
+            var a1 = context.Authors.Local.FirstOrDefault(a => a.LastName == "VanderMeer");
+            var a2 = context.Authors.Local.FirstOrDefault(a => a.LastName == "Poe");
 
             Book book1 = new()
             {
@@ -103,9 +111,9 @@ public class Seeder: ISeeder
 
         if (!context.Reviews.Any())
         {
-            var b1 = context.Books.Where(a => a.Title == "Unicestwienie").ToList().FirstOrDefault();
-            var b2 = context.Books.Where(a => a.Title == "Ujarzmienie").ToList().FirstOrDefault();
-            var b3 = context.Books.Where(a => a.Title == "Kruk").ToList().FirstOrDefault();
+            var b1 = context.Books.Local.Where(a => a.Title == "Unicestwienie").ToList().FirstOrDefault();
+            var b2 = context.Books.Local.Where(a => a.Title == "Ujarzmienie").ToList().FirstOrDefault();
+            var b3 = context.Books.Local.Where(a => a.Title == "Kruk").ToList().FirstOrDefault();
 
             Review review1 = new()
             {

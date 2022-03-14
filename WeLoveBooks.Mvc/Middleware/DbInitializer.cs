@@ -12,7 +12,7 @@ public static class DbInitializer
         await CreateRoles(builder, scope);
         await ConfigureSiteAdmin(scope, builder.Configuration);
         // TODO: Check how to seed DB in .NET6
-        // await Seed(scope);
+        await Seed(scope);
     }
 
     private static async Task Seed(IServiceScope scope)
@@ -52,6 +52,8 @@ public static class DbInitializer
 
         AppUser user = new()
         {
+            FirstName = "Site",
+            LastName = "Admin",
             UserName = cfg["SuperAdmin:UserName"],
             Email = cfg["SuperAdmin:Email"]
         };

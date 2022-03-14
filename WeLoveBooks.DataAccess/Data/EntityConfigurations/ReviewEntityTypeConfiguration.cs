@@ -27,6 +27,6 @@ internal class ReviewEntityTypeConfiguration : IEntityTypeConfiguration<Review>
         builder
             .HasOne(r => r.BookRate)
             .WithOne(br => br.Review)
-            .HasForeignKey(typeof(BookRate), "Id");
+            .HasForeignKey<Review>();
     }
 }
