@@ -20,4 +20,4 @@ In Order to run the program locally, **you need to have your Super Admin usernam
   }
 }
 ```
-You also need to have your instance of the database (please find the *script.sql* file stored in the DataAccess project).
+You also need to have your instance of the database (please find the *script.sql* file stored in the DataAccess project or update database with EF Core Tool and Migrations history).
